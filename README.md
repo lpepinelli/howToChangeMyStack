@@ -2,7 +2,10 @@
 <p align="center">
   <img align="center" src="https://user-images.githubusercontent.com/43144939/144236444-9ff0a22a-53fc-42c3-9691-470f042b2d39.png"/>
 </p>
+
 Read this in english: <a href="readme_US.me"><img height="16" src="https://raw.githubusercontent.com/lipis/flag-icons/95cbeb22405dad5b86ee76df892c3666e81882d8/flags/4x3/us.svg" alt="US"/></a>
+
+>### 🚧 Projeto em Desenvolvimento
 
 ## 🎯 **Objetivo**
 
@@ -43,14 +46,14 @@ Eu estou insatisfeito com a minha stack atual, e por estar confortável com java
 - <code><img height="32" src="https://avatars.githubusercontent.com/u/5658226?s=200&v=4"/></code> Express
 - <code><img height="32" src="https://avatars.githubusercontent.com/u/17219288?s=200&v=4"/></code> PrismaORM
 
-## Projetos
+## 💻 Projetos
 
 O projeto escolhido foi um cadastro simples de Livros.
 <p align="center">
   <img align="center" src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/34d25b19-c60e-4f91-a278-5f0558fe2322/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20211201%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20211201T124810Z&X-Amz-Expires=86400&X-Amz-Signature=ce99e689bf3f2c679e27a48e453aeb3fe6ce9f8e6ee7b057abeeb66f7580d285&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22&x-id=GetObject"/>
 </p>
 
-### 1. Stack Atual
+### [1. Stack Atual](/1-MyStack)
 
 - <code><img height="32" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/html/html.png"/></code> HTML
 - <code><img height="32" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/bootstrap/bootstrap.png"/></code> Bootstrap
