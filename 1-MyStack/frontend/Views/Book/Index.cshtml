@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="content-body">
+    <p></p>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-9 mb-0">
+                            <div class="input-group">
+                                <div class="input-group-btn search-panel">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="btnFiltro" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Filtro
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="btnFiltro">
+                                        <li><a class="dropdown-item" href="#">Nome</a></li>
+                                    </ul>
+                                </div>
+                                <input type="hidden" name="search_param" value="all" id="search_param">
+                                <input type="text" class="form-control" name="x" placeholder="Pesquisar por nome" id="search_value">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-secondary" type="button" id="btnSearch"><i class="ionicons ion-android-search"></i></button>
+                                    <button class="btn btn-success ml-1" type="button" id="btnAdd"><i class="ionicons ion-android-add"></i></button>
+                                </span>
+                            </div>
+                        </div>
+
+                        <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                        <div class="heading-elements">
+                            <ul class="list-inline mt-0 mb-0">
+                                @*<li><a class="copy"><i class="icon-copy"></i></a></li>
+                                <li><a class="excel"><i class="icon-file-excel"></i></a></li>
+                                <li><a class="pdf"><i class="icon-file-pdf"></i></a></li>
+                                <li><a class="print"><i class="icon-printer3"></i></a></li>*@
+                                <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                                <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                                <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body collapse in">
+                     <div id="divLoading">
+
+                    </div>
+                    <div class="table-responsive" id="table">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Views/Book/Index.js"></script>
+}
