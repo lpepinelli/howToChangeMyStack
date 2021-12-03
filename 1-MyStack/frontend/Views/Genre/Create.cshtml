@@ -1,10 +1,10 @@
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Incluir";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div class="content-header row">
-    <div class="content-header-left col-md-6 col-xs-12 mb-1 pt-3">
-        <h3 class="content-header-title">Cadastro de Gêneros</h3>
+<div class="content-header row mt-3">
+    <div class="content-header-left col-md-6 col-xs-12 mb-1">
+        <h2 class="content-header-title">Cadastro de Gêneros</h2>
     </div>
 </div>
 <div class="content-body">
@@ -12,87 +12,91 @@
         <div class="row match-height">
             <div class="col-sm-12">
                 <div class="card">
-                    <div class="card-body">
-                        <form>
-                            <div class="mb-3">
-                                <h5><i class="ionicons ion-grid"></i> Gênero</h5>
-                                <hr/>
-                            </div>
-                            <div class="mb-3">
-                                <div class="form-group col-sm-4">
-                                    <label class="form-label">Nome <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control required" id="nome"
-                                        placeholder="Nome">
-                                    <div class="text-danger" style="display: none">
-                                        Informe o Nome.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-actions mt-4">
-                                <hr class="bg-secondary"/>
-                                <button type="button" class="btn btn-success mr-3" id="btnSalvar"
-                                    data-bs-toggle="modal">
-                                    <i class="fa fa-floppy-o"></i> Salvar
-                                </button>
-                                <button type="button" class="btn btn-light border" id="btnVoltar">
-                                    <i class="fa fa-long-arrow-left"></i> Voltar
-                                </button>
-                            </div>
+                    <div class="card-body collapse in">
+                        <div class="card-block">
 
-                            <!-- Modal Warning-->
-                            <div id="warning" class="modal fade" style="display: none;">
-                                <div class="modal-dialog modal-confirm">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <div class="box-icon-warning">
-                                                <i class="icon-alert"></i>
+                            <form class="form">
+                                <div class="form-body">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <h4 class="form-section"><i class="icon-grid"></i>Gênero</h4>
+                                        </div>
+                                        <div class="form-group col-sm-4">
+                                            <label>Nome <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control required" id="name"
+                                                placeholder="Nome">
+                                            <div class="text-danger" style="display: none">
+                                                Informe o Nome.
                                             </div>
-                                            <h4 class="modal-title">Atenção!</h4>
-                                            <button type="button" class="close" data-bs-dismiss="modal"
-                                                aria-hidden="true">×</button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p id="MsgWarn">
-
-                                            </p>
-                                            <h3>Deseja salvar o registro ?</h3>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-confirm" id="btnSalvarModal"
-                                                data-toggle="modal" data-target="#confirm"
-                                                data-bs-dismiss="modal">Salvar</button>
-                                            <button type="button" class="btn btn-info"
-                                                data-bs-dismiss="modal">Cancelar</button>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Modal Confirm-->
-                            <div id="confirm" class="modal fade" style="display: none;">
-                                <div class="modal-dialog modal-confirm">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <div class="box-icon-confirm">
-                                                <i class="icon-android-done"></i>
+                                <div class="form-actions">
+                                    <button type="button" class="btn btn-success mr-1" id="btnSalvar"
+                                        data-toggle="modal">
+                                        <i class="icon-floppy-o"></i> Salvar
+                                    </button>
+                                    <button type="button" class="btn btn-secundary" id="btnVoltar">
+                                        <i class="icon-arrow-left4"></i> Voltar
+                                    </button>
+                                </div>
+
+                                <!-- Modal Warning-->
+                                <div id="warning" class="modal fade" style="display: none;">
+                                    <div class="modal-dialog modal-confirm">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <div class="box-icon-warning">
+                                                    <i class="icon-alert"></i>
+                                                </div>
+                                                <h4 class="modal-title">Atenção!</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-hidden="true">×</button>
                                             </div>
-                                            <h4 class="modal-title">Deu certo !</h4>
-                                            <button type="button" class="close" data-bs-dismiss="modal"
-                                                aria-hidden="true">×</button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>
-                                                Registro incluído com sucesso.
-                                            </p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button id="btnOkModal" type="button" class="btn btn-confirm"
-                                                data-bs-dismiss="modal">Ok</button>
+                                            <div class="modal-body">
+                                                <p id="MsgWarn">
+
+                                                </p>
+                                                <h3>Deseja salvar o registro ?</h3>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-confirm" id="btnSalvarModal"
+                                                    data-toggle="modal" data-target="#confirm"
+                                                    data-dismiss="modal">Salvar</button>
+                                                <button type="button" class="btn btn-info"
+                                                    data-dismiss="modal">Cancelar</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </form>
+
+                                <!-- Modal Confirm-->
+                                <div id="confirm" class="modal fade" style="display: none;">
+                                    <div class="modal-dialog modal-confirm">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <div class="box-icon-confirm">
+                                                    <i class="icon-android-done"></i>
+                                                </div>
+                                                <h4 class="modal-title">Deu certo !</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-hidden="true">×</button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>
+                                                    Registro incluído com sucesso.
+                                                </p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button id="btnOkModal" type="button" class="btn btn-confirm"
+                                                    data-dismiss="modal">Ok</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

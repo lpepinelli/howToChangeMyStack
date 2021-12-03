@@ -5,7 +5,7 @@ let index = {
         index.loadBooks();
         document.getElementById("btnAdd").onclick = index.redirectCreate;
 
-        document.getElementById("btnSearch").onclick = index.buscar;
+        document.getElementById("btnSearch").onclick = index.search;
         document.getElementById("search_value").addEventListener("keyup", function (event) {
             // Number 13 is the "Enter" key on the keyboard
             if (event.keyCode === 13) {
@@ -18,7 +18,7 @@ let index = {
     search: function () {
         var value = document.getElementById("search_value").value;
 
-        var list = index.list.filter(el => el.nome.toLowerCase().indexOf(value.toLowerCase()) > -1);
+        var list = index.list.filter(el => el.name.toLowerCase().indexOf(value.toLowerCase()) > -1);
 
         index.fillBooks(list);
     },
@@ -44,8 +44,10 @@ let index = {
         let tr="<table class=\"table table-hover table-bordered\">"+
         "<thead class=\"thead-inverse\">"+
             "<tr>"+
-                "<th scope=\"col\" style=\"text-align:center\">Codigo</th>"+
-                "<th scope=\"col\">Nome</th>"+
+                "<th scope=\"col\" style=\"text-align:center\">Código</th>"+
+                "<th scope=\"col\">Título</th>"+
+                "<th scope=\"col\">Gênero</th>"+
+                "<th scope=\"col\">Autor</th>"+
                 "<th scope=\"col\" style=\"text-align:center\">Detalhes</th>"+
             "</tr>"+
         "</thead>"+
@@ -53,9 +55,11 @@ let index = {
 
         for(let i=0; i<Books.length; i++){
             tr += "<tr>"+
-                    "<td style='text-align:center; width: 50px'>"+Books[i].codCat+"</td>"+
-                    "<td>"+Books[i].nome+"</td>"+
-                    "<td style='text-align:center; width: 50px'><a class='btn btn-secondary btn-sm' href='/Book/Detalhes/"+Books[i].codCat+"'><i class='icon-eye'></i></a></td>"+
+                    "<td style='text-align:center; width: 50px'>"+Books[i].id+"</td>"+
+                    "<td>"+Books[i].title+"</td>"+
+                    "<td>"+Books[i].genre.name+"</td>"+
+                    "<td>"+Books[i].author+"</td>"+
+                    "<td style='text-align:center; width: 50px'><a class='btn btn-secondary btn-sm' href='/Book/Details/"+Books[i].id+"'><i class='icon-eye'></i></a></td>"+
                 "</tr>";
         }
         tr+="</tbody>"+

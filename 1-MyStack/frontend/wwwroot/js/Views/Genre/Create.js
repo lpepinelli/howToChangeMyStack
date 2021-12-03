@@ -1,13 +1,13 @@
 let index={
     init: function(){
-        document.getElementById("btnSalvar").onclick = index.valida;
-        document.getElementById("btnSalvarModal").onclick = index.salvar;
-        document.getElementById("btnVoltar").onclick = index.voltar;
-        document.getElementById("btnOkModal").onclick = index.voltar;
-        insereValidacao();
+        document.getElementById("btnSalvar").onclick = index.isValid;
+        document.getElementById("btnSalvarModal").onclick = index.create;
+        document.getElementById("btnVoltar").onclick = index.back;
+        document.getElementById("btnOkModal").onclick = index.back;
+        insertValidation();
     },
 
-    valida: function () {
+    isValid: function () {
 
         var elements = document.getElementsByClassName("required");
 
@@ -17,20 +17,20 @@ let index={
             }
         }
 
-        var invalidos = document.getElementsByClassName("invalido");
+        var invalid = document.getElementsByClassName("invalido");
 
-        if (invalidos.length == 0) {
-            document.getElementById("btnSalvar").dataset.bsTarget = "#warning";
+        if (invalid.length == 0) {
+            document.getElementById("btnSalvar").dataset.target = "#warning";
         }
         else
-            document.getElementById("btnSalvar").dataset.bsTarget = "";
+            document.getElementById("btnSalvar").dataset.target = "";
     },
 
-    salvar: async function () {
+    create: async function () {
         try{
-            if (valida()) {
+            if (isValid()) {
                 var dados = {
-                    nome: document.getElementById("nome").value
+                    name: document.getElementById("name").value
                 }
                 let url = $API+"/Genre";
                 const {response, error} = await fetchAsync(url, "CREATE", dados);
@@ -43,7 +43,7 @@ let index={
         }
     },
 
-    voltar: function () {
+    back: function () {
         window.location.href = "/Genre";
     }
 };

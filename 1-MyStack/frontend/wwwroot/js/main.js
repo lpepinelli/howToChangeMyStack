@@ -15,7 +15,7 @@ function dateToDateInput(date){
     return date.getFullYear() + "-" + mesAtual + "-" + diaAtual;
 }
 
-function insereValidacao(){
+function insertValidation(){
     var elements = document.getElementsByClassName("required");
     var msgs = document.getElementsByClassName("text-danger");
 
@@ -42,7 +42,7 @@ function insereValidacao(){
     }
 }
 
-function resetValidacao(){
+function resetValidation(){
     const elements = document.querySelectorAll(".invalido");
     const msgs = document.querySelectorAll("div.text-danger");
     for(let i=0; i<elements.length; i++)
@@ -51,7 +51,7 @@ function resetValidacao(){
         msgs[j].style.display = "none";
 }
 
-function valida(){
+function isValid(){
     var elements = document.getElementsByClassName("required");
 
     for (var i = 0; i < elements.length; i++) {
@@ -134,5 +134,28 @@ async function fetchAsync(url, method, data=null, options=null) { //Padronizar a
     }
     finally{
         return {response, json, error, message};
+    }
+}
+
+function preparaModalConfirmDelete(result, msg){
+    if(result){
+        document.getElementById("boxIcon").classList.remove("box-icon-danger");
+        document.getElementById("boxIcon").classList.add("box-icon-confirm");
+        document.getElementById("icon").classList.remove("icon-android-close");
+        document.getElementById("icon").classList.add("icon-android-done");
+        document.getElementById("title").innerText = "Deu certo!";
+        document.getElementById("msgConfirm").innerText = msg;
+        document.getElementById("btnOkModal").classList.remove("btn-danger");
+        document.getElementById("btnOkModal").classList.add("btn-confirm");
+    }
+    else{
+        document.getElementById("boxIcon").classList.remove("box-icon-confirm");
+        document.getElementById("boxIcon").classList.add("box-icon-danger");
+        document.getElementById("icon").classList.remove("icon-android-done");
+        document.getElementById("icon").classList.add("icon-android-close");
+        document.getElementById("title").innerText = "Erro!";
+        document.getElementById("msgConfirm").innerText = msg;
+        document.getElementById("btnOkModal").classList.remove("btn-confirm");
+        document.getElementById("btnOkModal").classList.add("btn-danger");
     }
 }

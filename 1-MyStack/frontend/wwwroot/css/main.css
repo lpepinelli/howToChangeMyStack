@@ -168,3 +168,21 @@
           .modal-confirm .btn-confirm:hover, .modal-confirm .btn-confirm:focus {
               background: #48CFAD;
           }
+          .image-preview{
+            /*width: 470px;*/
+            min-height: 200px;
+            border: 1px solid #dddddd;
+            margin-top: 15px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: large;
+            color: #cccccc;
+        }
+
+        .image-preview__image{
+            display: none;
+            width: 100%;
+        }

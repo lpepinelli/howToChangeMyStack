@@ -42,7 +42,7 @@ let index = {
 
     fillGenres: function(Genres){
         let tr="<table class=\"table table-hover table-bordered\">"+
-        "<thead class=\"table-dark\">"+
+        "<thead class=\"thead-inverse\">"+
             "<tr>"+
                 "<th scope=\"col\" style=\"text-align:center\">Codigo</th>"+
                 "<th scope=\"col\">Nome</th>"+
@@ -55,7 +55,7 @@ let index = {
             tr += "<tr>"+
                     "<td style='text-align:center; width: 50px'>"+Genres[i].id+"</td>"+
                     "<td>"+Genres[i].name+"</td>"+
-                    "<td style='text-align:center; width: 50px'><a class='btn btn-light border btn-sm' href='/Genre/Detalhes/"+Genres[i].id+"'><i class='ionicons ion-eye'></i></a></td>"+
+                    "<td style='text-align:center; width: 50px'><a class='btn btn-secondary btn-sm' href='/Genre/Details/"+Genres[i].id+"'><i class='icon-eye'></i></a></td>"+
                 "</tr>";
         }
         tr+="</tbody>"+
