@@ -1,5 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers
@@ -8,6 +13,11 @@ namespace backend.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
+        private IWebHostEnvironment hostingEnvironment;
+        public BookController(IWebHostEnvironment environment)
+        {
+            hostingEnvironment = environment;
+        }
 
         // GET: api/Book
         [HttpGet]
@@ -63,6 +73,33 @@ namespace backend.Controllers
             var cod = objBook.Create(Book);
 
             return CreatedAtAction(nameof(GetBook), new { id = cod }, Book);
+        }
+
+        [HttpPost]
+        [Route("Image")]
+        public async Task<IActionResult> PostImage(IList<IFormFile> files)
+        {
+            Control.ImageControl objImage = new Control.ImageControl(hostingEnvironment);
+            await objImage.SaveFile(files);
+            return Ok();
+        }
+
+        [HttpPut]
+        [Route("Image")]
+        public async Task<IActionResult> PutImage(string previousFile, IList<IFormFile> files)
+        {
+            Control.ImageControl objImage = new Control.ImageControl(hostingEnvironment);
+            objImage.DeleteFile(previousFile);
+            await objImage.SaveFile(files);
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("GetImage")]
+        public IActionResult GetImage([FromBody] String fileName)
+        {
+            Control.ImageControl objImage = new Control.ImageControl(hostingEnvironment);
+            return File(objImage.GetFile(fileName), "application/octet-stream");
         }
 
         // DELETE: api/Book/5

@@ -33,7 +33,7 @@ let index = {
     switchButton: function () {
         var tr = "";
         if (document.getElementById("name").disabled) {
-            tr += "<button type=\"button\" class=\"btn btn-success mr-1\" onclick=\"index.create()\">" +
+            tr += "<button type=\"button\" class=\"btn btn-success mr-1\" onclick=\"index.update()\">" +
                 "<i class=\"icon-floppy-o\"></i> Salvar" +
                 "</button>" +
                 "<button type=\"button\" class=\"btn btn-secundary\" onclick=\"index.iniState()\">" +
@@ -65,7 +65,7 @@ let index = {
         document.getElementById("name").disabled = !bool;
     },
 
-    create: async function () {
+    update: async function () {
         try{
             if (isValid()) {
                 var dados = {

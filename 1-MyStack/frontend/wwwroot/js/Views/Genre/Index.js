@@ -5,7 +5,7 @@ let index = {
         index.loadGenres();
         document.getElementById("btnAdd").onclick = index.redirectCreate;
 
-        document.getElementById("btnSearch").onclick = index.buscar;
+        document.getElementById("btnSearch").onclick = index.search;
         document.getElementById("search_value").addEventListener("keyup", function (event) {
             // Number 13 is the "Enter" key on the keyboard
             if (event.keyCode === 13) {

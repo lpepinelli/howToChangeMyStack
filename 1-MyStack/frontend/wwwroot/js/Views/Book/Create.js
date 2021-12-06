@@ -115,13 +115,35 @@ let index={
         }
     },
 
+    saveImage: async function (bk_id){
+        let formData = new FormData();
+        let inpts = document.getElementById("inpFile");
+        let auxName="";
+
+        auxName = bk_id+"-"+inpts.files[0].name;
+        formData.append("files", inpts.files[0], auxName);
+
+        const options= {
+            method: "POST",
+            body: formData,
+            processData: false,
+            contentType: false,
+        }
+
+        const {response, json, error} = await fetchAsync($API+"/Book/Image", "CREATE", null, options);
+        if(response.ok)
+            console.log(json);
+        else
+            console.log(error);
+    },
+
     create: async function () {
         try{
             if (isValid()) {
                 var dados = {
                     title: document.getElementById("title").value,
                     author: document.getElementById("author").value,
-                    image: document.getElementById("inpFile").value,
+                    cover: document.getElementById("inpFile").files[0].name,
                     genre: {
                         id: document.getElementById("cbGenres").value
                     },
@@ -129,8 +151,10 @@ let index={
                     publication: document.getElementById("publication").value
                 }
                 let url = $API+"/Book";
-                const {response, error} = await fetchAsync(url, "CREATE", dados);
-                if(!response.ok)
+                const {response, json, error} = await fetchAsync(url, "CREATE", dados);
+                if(response.ok)
+                    index.saveImage(json.id);
+                else
                     console.log(error);
             }
         }

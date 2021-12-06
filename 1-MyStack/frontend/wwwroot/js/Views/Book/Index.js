@@ -18,7 +18,7 @@ let index = {
     search: function () {
         var value = document.getElementById("search_value").value;
 
-        var list = index.list.filter(el => el.name.toLowerCase().indexOf(value.toLowerCase()) > -1);
+        var list = index.list.filter(el => el.title.toLowerCase().indexOf(value.toLowerCase()) > -1);
 
         index.fillBooks(list);
     },
