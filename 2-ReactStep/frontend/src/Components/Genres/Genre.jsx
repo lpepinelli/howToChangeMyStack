@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Book = () => {
+const Genre = () => {
     return (
         <div>
 
@@ -8,4 +8,4 @@ const Book = () => {
     )
 }
 
-export default Book
+export default Genre

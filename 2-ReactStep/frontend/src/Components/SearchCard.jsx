@@ -1,6 +1,17 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
+import Input from './Forms/Input'
+import Table from './Table'
 
 const SearchCard = (props) => {
+    const [search, setSearch] = React.useState('');
+    const [filter, setFilter] = React.useState(props.filters[0]);
+    const [data, setData] = React.useState(props.data);
+
+    function Search(){
+        setData(data.filter(el => el[filter.property].toLowerCase().indexOf(search.toLowerCase()) > -1))
+    }
+
     return (
         <div className="row">
             <div className="col-xs-12">
@@ -14,17 +25,16 @@ const SearchCard = (props) => {
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Filtro</button>
                                         <div className="dropdown-menu">
                                             {props.filters.map((filter)=>{
-                                                return <a href="/#" key={filter.property} className="dropdown-item">{filter.label}</a>
+                                                return <button type="button" style={{cursor:"pointer"}} onClick={()=>setFilter(filter)} key={filter.property} className="dropdown-item">{filter.label}</button>
                                             })}
                                         </div>
                                     </div>
-                                    <input type="hidden" name="search_param" value="all" id="search_param"/>
-                                    <input type="text" className="form-control" name="x" placeholder="Pesquisar por título" id="search_value"/>
+                                    <Input type="text" className="form-control" placeholder={`Pesquisar por ${filter.label}`} value={search} setValue={setSearch}/>
                                     <span className="input-group-btn">
-                                        <button className="btn btn-secondary" type="button" id="btnSearch"><span
+                                        <button className="btn btn-secondary" type="button" onClick={Search}><span
                                                 className="icon-android-search"></span></button>
-                                        <button className="btn btn-success ml-1" type="button" id="btnAdd"><span
-                                                className="icon-android-add"></span></button>
+                                        <Link to={`${props.entity}/Create`}><button className="btn btn-success ml-1" type="button"><span
+                                                className="icon-android-add"></span></button></Link>
                                     </span>
                                 </div>
                             </div>
@@ -34,9 +44,10 @@ const SearchCard = (props) => {
                         <div id="divLoading">
 
                         </div>
-                        <div className="table-responsive" id="table">
-
-                        </div>
+                        <Table
+                            headers={props.headers}
+                            data={data}
+                            entity={props.entity}/>
                     </div>
                 </div>
             </div>

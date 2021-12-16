@@ -2,9 +2,10 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Header from './Components/Header';
-import Books from './Components/Books';
-import Book from './Components/Book';
-import Genres from './Components/Genres';
+import Books from './Components/Books/Books';
+import Book from './Components/Books/Book';
+import Genres from './Components/Genres/Genres';
+import Genre from './Components/Genres/Genre';
 
 function App() {
   return <>
@@ -14,8 +15,9 @@ function App() {
               <div class="content-wrapper reset leftprint mt-4">
                   <Routes>
                     <Route path="/" element={<Books/>}/>
-                    <Route path="Books/:id" element={<Book/>}/>
+                    <Route path="Book/Details/:id" element={<Book/>}/>
                     <Route path="Genre" element={<Genres/>}/>
+                    <Route path="Genre/Details/:id" element={<Genre/>}/>
                   </Routes>
                   <hr />
               </div>
