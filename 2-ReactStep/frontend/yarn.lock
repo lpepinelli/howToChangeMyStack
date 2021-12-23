@@ -50,7 +50,7 @@
     semver "^5.4.1"
     source-map "^0.5.0"
 
-"@babel/core@^7.1.0", "@babel/core@^7.12.3", "@babel/core@^7.7.5", "@babel/core@^7.8.4":
+"@babel/core@^7.1.0", "@babel/core@^7.12.3", "@babel/core@^7.16.5", "@babel/core@^7.7.5", "@babel/core@^7.8.4":
   version "7.16.5"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.16.5.tgz#924aa9e1ae56e1e55f7184c8bf073a50d8677f5c"
   integrity sha512-wUcenlLzuWMZ9Zt8S0KmFwGlH6QKRh3vsm/dhDA3CHkiTA45YuG1XkHRcNRl73EFPXDp/d5kVOU0/y7x2w6OaQ==
@@ -4528,6 +4528,11 @@ eslint-config-react-app@^6.0.0:
   integrity sha512-bpoAAC+YRfzq0dsTk+6v9aHm/uqnDwayNAXleMypGl6CpxI9oXXscVHo4fk3eJPIn+rsbtNetB4r/ZIidFIE8A==
   dependencies:
     confusing-browser-globals "^1.0.10"
+
+eslint-config-react@^1.1.7:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/eslint-config-react/-/eslint-config-react-1.1.7.tgz#a0918d0fc47d0e9bd161a47308021da85d2585b3"
+  integrity sha1-oJGND8R9DpvRYaRzCAIdqF0lhbM=
 
 eslint-import-resolver-node@^0.3.6:
   version "0.3.6"
@@ -10435,6 +10440,16 @@ svgo@^1.0.0, svgo@^1.2.2:
     stable "^0.1.8"
     unquote "~1.1.1"
     util.promisify "~1.0.0"
+
+sweetalert2-react-content@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/sweetalert2-react-content/-/sweetalert2-react-content-4.2.0.tgz#ab4a6e02e37150dd0ea34d00179ec76952e3f442"
+  integrity sha512-eB324swnq10UJH8nAH2S6GHuAKDgH6GpGU8vI+ulYdmlPzpb0T5QPc7O4RFNRx28GzVZUnfvtpxZbKtZ5/KOnQ==
+
+sweetalert2@^11.3.0:
+  version "11.3.0"
+  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-11.3.0.tgz#39be4b23a02be479f36441f3a5f16a5d6364aba3"
+  integrity sha512-C0TFp0VLxgx+PmhJ0mL8qzx+iYjnCLdDbvQHKY6KAGI+xwawMvLkStPgw2LmJl6itaDhR/qLQStPFIbr1VK9Ow==
 
 symbol-tree@^3.2.4:
   version "3.2.4"

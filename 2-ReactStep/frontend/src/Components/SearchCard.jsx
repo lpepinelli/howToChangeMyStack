@@ -9,7 +9,12 @@ const SearchCard = (props) => {
     const [data, setData] = React.useState(props.data);
 
     function Search(){
-        setData(data.filter(el => el[filter.property].toLowerCase().indexOf(search.toLowerCase()) > -1))
+        setData(props.data.filter(el => el[filter.property].toLowerCase().indexOf(search.toLowerCase()) > -1))
+    }
+
+    function handleKeyDown({key}){
+        if(key === 'Enter')
+            Search();
     }
 
     return (
@@ -29,7 +34,7 @@ const SearchCard = (props) => {
                                             })}
                                         </div>
                                     </div>
-                                    <Input type="text" className="form-control" placeholder={`Pesquisar por ${filter.label}`} value={search} setValue={setSearch}/>
+                                    <Input type="text" className="form-control" onKeyDown={handleKeyDown} placeholder={`Pesquisar por ${filter.label}`} value={search} setValue={setSearch}/>
                                     <span className="input-group-btn">
                                         <button className="btn btn-secondary" type="button" onClick={Search}><span
                                                 className="icon-android-search"></span></button>

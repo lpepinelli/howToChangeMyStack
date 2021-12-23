@@ -25,7 +25,7 @@ const Books = () => {
     if(books===null) return null;
     return (
         <>
-            <Head title="Consulta - Livros"/>
+            <Head title="Consulta | Livros"/>
             <Title>Consulta - Livros</Title>
             <div className="content-body">
                 {<SearchCard
@@ -38,10 +38,10 @@ const Books = () => {
                         {label: "Gênero", property: "genre"}
                     ]}
                     data={books.map((book)=>{
-                        return [{id: book.id},
-                                book.title,
-                                book.genre.name,
-                                book.author]
+                        return {id: book.id,
+                                title: book.title,
+                                genre: book.genre.name,
+                                author: book.author}
                     })}
                     entity="Book"
                 />}

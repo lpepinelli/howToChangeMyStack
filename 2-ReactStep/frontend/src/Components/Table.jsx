@@ -17,13 +17,13 @@ const Table = ({headers, data, entity}) => {
                 </thead>
                 <tbody>
                     {data.map((item)=>{
-                    return <tr key={item[0].id}>
-                            <td className={`${styles.center} ${styles.smallColumn}`}>{item[0].id}</td>
-                            {item.slice(1).map((key, index)=>{
-                                return <td key={index}>{key[Object.keys(key)]}</td>
+                    return <tr key={item.id}>
+                            <td className={`${styles.center} ${styles.smallColumn}`}>{item.id}</td>
+                            {Object.keys(item).slice(1).map((key, index) =>{
+                                return <td key={index}>{item[key]}</td>
                             })}
                             <td className={`${styles.center} ${styles.smallColumn}`}>
-                                <Link class='btn btn-secondary btn-sm' to={`${entity}/Details/${item[0].id}`}>
+                                <Link class='btn btn-secondary btn-sm' to={`${entity}/Details/${item.id}`}>
                                     <i class='icon-eye'></i>
                                 </Link>
                             </td>
