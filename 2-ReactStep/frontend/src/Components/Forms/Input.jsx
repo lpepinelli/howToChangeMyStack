@@ -5,11 +5,12 @@ const Input = ({type, id, value, setValue, error, ...props}) => {
         <>
             <input
                 type={type}
+                className={'form-control '+(error && 'invalido')}
                 id={id}
                 value={value}
                 onChange={({target}) => setValue(target.value)}
                 {...props}/>
-            {error && <div class="text-danger" style="display: none">{error}</div>}
+            {error && <div className="text-danger">{error}</div>}
         </>
     )
 }

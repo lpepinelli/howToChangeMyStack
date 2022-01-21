@@ -23,7 +23,7 @@ const Table = ({headers, data, entity}) => {
                                 return <td key={index}>{item[key]}</td>
                             })}
                             <td className={`${styles.center} ${styles.smallColumn}`}>
-                                <Link class='btn btn-secondary btn-sm' to={`${entity}/Details/${item.id}`}>
+                                <Link class='btn btn-secondary btn-sm' to={`/${entity}/Details/${item.id}`}>
                                     <i class='icon-eye'></i>
                                 </Link>
                             </td>

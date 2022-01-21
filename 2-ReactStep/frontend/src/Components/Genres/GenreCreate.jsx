@@ -1,11 +1,28 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 import Head from '../Head'
 import Title from '../Title'
 import Input from '../Forms/Input'
 import useForm from '../Hooks/useForm'
+import useFetch from '../Hooks/useFetch'
+import WarningAlert from '../Alerts/WarningAlert';
+import ConfirmAlert from '../Alerts/ConfirmAlert';
 
 function GenreCreate() {
-    const Name = useForm();
+    const Name = useForm('Informe o Nome');
+    const {loading, request, error} = useFetch();
+
+    async function handleClick(){
+        if (Name.validate()) {
+            var dados = {
+                name: Name.value
+            }
+            const {response, error} = await request("https://localhost:5002/api/Genre", "CREATE", dados);
+            if(!response.ok)
+                console.log(error);
+        }
+    }
+
     return (
         <>
             <Head title="Cadastro | Gêneros"/>
@@ -25,19 +42,19 @@ function GenreCreate() {
                                                     </div>
                                                     <div class="form-group col-sm-4">
                                                         <label>Nome <span class="text-danger">*</span></label>
-                                                        <Input type="text" className="form-control" placeholder="Nome" value={Name.value} setValue = {Name.setValue} onBlur={Name.onBlur}/>
+                                                        <Input type="text" placeholder="Nome" value={Name.value} setValue = {Name.setValue} onBlur={Name.onBlur} onChange={Name.onChange} error={Name.error}/>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class="form-actions">
                                                 <button type="button" class="btn btn-success mr-1" id="btnSalvar"
-                                                    data-toggle="modal">
+                                                    data-toggle="modal" data-target={Name.value==="" ? "":"#warning"} onClick={()=>Name.validate()}>
                                                     <i class="icon-floppy-o"></i> Salvar
                                                 </button>
-                                                <button type="button" class="btn btn-secundary" id="btnVoltar">
+                                                <Link to="/Genre"><button type="button" class="btn btn-secundary" id="btnVoltar">
                                                     <i class="icon-arrow-left4"></i> Voltar
-                                                </button>
+                                                </button></Link>
                                             </div>
                                         </form>
                                     </div>
@@ -47,6 +64,8 @@ function GenreCreate() {
                     </div>
                 </section>
             </div>
+            <WarningAlert onClick={handleClick}/>
+            <ConfirmAlert redirect="/Genre"/>
         </>
     )
 }

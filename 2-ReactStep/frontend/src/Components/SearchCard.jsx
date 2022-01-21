@@ -38,7 +38,7 @@ const SearchCard = (props) => {
                                     <span className="input-group-btn">
                                         <button className="btn btn-secondary" type="button" onClick={Search}><span
                                                 className="icon-android-search"></span></button>
-                                        <Link to={`${props.entity}/Create`}><button className="btn btn-success ml-1" type="button"><span
+                                        <Link to={`/${props.entity}/Create`}><button className="btn btn-success ml-1" type="button"><span
                                                 className="icon-android-add"></span></button></Link>
                                     </span>
                                 </div>
