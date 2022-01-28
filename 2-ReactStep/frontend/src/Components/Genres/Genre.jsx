@@ -42,6 +42,14 @@ const Genre = () => {
         }
     }
 
+    async function handleDelete(){
+        const {response, error} = await request("https://localhost:5002/api/Genre/"+id, "DELETE");
+        if(response.ok)
+            setEdit(false);
+        else
+            console.log(error);
+    }
+
     function initState(){
         Name.setValue(genre.name);
         Name.validate(Name.value);
@@ -101,7 +109,7 @@ const Genre = () => {
                     </div>
                 </section>
             </div>
-            <WarningAlert onClick={handleClick} type="update"/>
+            <WarningAlert onClick={handleDelete} type="delete"/>
             <ConfirmAlert redirect="/Genre"/>
         </>
     )

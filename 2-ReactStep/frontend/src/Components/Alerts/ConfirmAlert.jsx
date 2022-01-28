@@ -1,7 +1,13 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { useNavigate  } from 'react-router-dom';
 
 const ConfirmAlert = ({redirect}) => {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate(redirect);
+    }
+
     return (
         <div id="confirm" className="modal fade" style={{display: 'none'}}>
             <div className="modal-dialog modal-confirm">
@@ -20,8 +26,8 @@ const ConfirmAlert = ({redirect}) => {
                         </p>
                     </div>
                     <div className="modal-footer">
-                    <Link to={redirect}><button type="button" className="btn btn-confirm"
-                            data-dismiss="modal">Ok</button></Link>
+                    <button type="button" className="btn btn-confirm" onClick={handleClick}
+                            data-dismiss="modal">Ok</button>
                     </div>
                 </div>
             </div>
