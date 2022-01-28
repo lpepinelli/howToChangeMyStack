@@ -1,12 +1,12 @@
 import React from 'react'
 
-const WarningAlert = ({onClick}) => {
+const WarningAlert = ({onClick, type}) => {
     return (
             <div id="warning" className="modal fade" style={{display: 'none'}}>
                 <div className="modal-dialog modal-confirm">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <div className="box-icon-warning">
+                            <div className={type === 'save' ? "box-icon-warning": "box-icon-danger"}>
                                 <i className="icon-alert"></i>
                             </div>
                             <h4 className="modal-title">Atenção!</h4>
@@ -17,11 +17,11 @@ const WarningAlert = ({onClick}) => {
                             <p id="MsgWarn">
 
                             </p>
-                            <h3>Deseja salvar o registro ?</h3>
+                            <h3>{type === 'save' ? "Deseja salvar o registro ?": "Deseja excluir o registro ?"}</h3>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-confirm" data-toggle="modal" data-target="#confirm"
-                                data-dismiss="modal" onClick={onClick}>Salvar</button>
+                            <button type="button" className={"btn "+(type === 'save' ? "btn-confirm":"btn-danger")} data-toggle="modal" data-target="#confirm"
+                                data-dismiss="modal" onClick={onClick}>{type === 'save' ? "Salvar" : "Excluir"}</button>
                             <button type="button" className="btn btn-info"
                                 data-dismiss="modal">Cancelar</button>
                         </div>

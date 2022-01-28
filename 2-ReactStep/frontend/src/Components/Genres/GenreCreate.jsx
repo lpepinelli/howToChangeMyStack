@@ -27,33 +27,33 @@ function GenreCreate() {
         <>
             <Head title="Cadastro | Gêneros"/>
             <Title>Cadastro de Gêneros</Title>
-            <div class="content-body">
+            <div className="content-body">
                 <section id="basic-form-layouts">
-                    <div class="row match-height">
-                        <div class="col-sm-12">
-                            <div class="card">
-                                <div class="card-body collapse in">
-                                    <div class="card-block">
-                                        <form class="form">
-                                            <div class="form-body">
-                                                <div class="row">
-                                                    <div class="col-sm-12">
-                                                        <h4 class="form-section"><i class="icon-grid"></i>Gênero</h4>
+                    <div className="row match-height">
+                        <div className="col-sm-12">
+                            <div className="card">
+                                <div className="card-body collapse in">
+                                    <div className="card-block">
+                                        <form className="form">
+                                            <div className="form-body">
+                                                <div className="row">
+                                                    <div className="col-sm-12">
+                                                        <h4 className="form-section"><i className="icon-grid"></i>Gênero</h4>
                                                     </div>
-                                                    <div class="form-group col-sm-4">
-                                                        <label>Nome <span class="text-danger">*</span></label>
+                                                    <div className="form-group col-sm-4">
+                                                        <label>Nome <span className="text-danger">*</span></label>
                                                         <Input type="text" placeholder="Nome" value={Name.value} setValue = {Name.setValue} onBlur={Name.onBlur} onChange={Name.onChange} error={Name.error}/>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <div class="form-actions">
-                                                <button type="button" class="btn btn-success mr-1" id="btnSalvar"
+                                            <div className="form-actions">
+                                                <button type="button" className="btn btn-success mr-1" id="btnSalvar"
                                                     data-toggle="modal" data-target={Name.value==="" ? "":"#warning"} onClick={()=>Name.validate()}>
-                                                    <i class="icon-floppy-o"></i> Salvar
+                                                    <i className="icon-floppy-o"></i> Salvar
                                                 </button>
-                                                <Link to="/Genre"><button type="button" class="btn btn-secundary" id="btnVoltar">
-                                                    <i class="icon-arrow-left4"></i> Voltar
+                                                <Link to="/Genre"><button type="button" className="btn btn-secundary" id="btnVoltar">
+                                                    <i className="icon-arrow-left4"></i> Voltar
                                                 </button></Link>
                                             </div>
                                         </form>
@@ -64,7 +64,7 @@ function GenreCreate() {
                     </div>
                 </section>
             </div>
-            <WarningAlert onClick={handleClick}/>
+            <WarningAlert onClick={handleClick} type="save"/>
             <ConfirmAlert redirect="/Genre"/>
         </>
     )

@@ -20,7 +20,7 @@ const ConfirmAlert = ({redirect}) => {
                         </p>
                     </div>
                     <div className="modal-footer">
-                    <Link to={redirect}><button id="btnOkModal" type="button" className="btn btn-confirm"
+                    <Link to={redirect}><button type="button" className="btn btn-confirm"
                             data-dismiss="modal">Ok</button></Link>
                     </div>
                 </div>
