@@ -1,24 +1,39 @@
-import React from 'react'
+import React from 'react';
 import { Link } from 'react-router-dom';
-import Head from '../Head'
-import Title from '../Title'
-import Input from '../Forms/Input'
-import useForm from '../Hooks/useForm'
-import useFetch from '../Hooks/useFetch'
+import Head from '../Head';
+import Title from '../Title';
+import Input from '../Forms/Input';
+import useForm from '../Hooks/useForm';
+import useFetch from '../Hooks/useFetch';
 import WarningAlert from '../Alerts/WarningAlert';
 import ConfirmAlert from '../Alerts/ConfirmAlert';
 
 function BookCreate() {
-    const Name = useForm('Informe o Nome');
-    const Title = useForm('Informe o Título');
-    const Author = useForm('Informe o Autor');
+    const varTitle = useForm('Informe o Título');
+    const varAuthor = useForm('Informe o Autor');
+    const varDate = useForm('Informe a Data de Publicação');
+    const varISBN = useForm();
+
+    const [select, setSelect] = React.useState("0");
+    const [Genres, setGenres] = React.useState(null);
 
     const {loading, request, error} = useFetch();
 
+    React.useEffect(()=>{
+        async function fetchBooks(url){
+            const {response, json, error} = await request(url, "READ");
+            if(response.ok)
+                setGenres(json);
+            else
+                console.error(error);
+        }
+        fetchBooks("https://localhost:5002/api/Genre");
+    },[])
+
     async function handleClick(){
-        if (Name.validate()) {
+        if (varTitle.validate() && varAuthor.validate() && varDate.validate()) {
             var dados = {
-                name: Name.value
+                name: varTitle.value
             }
             const {response, error} = await request("https://localhost:5002/api/Book", "CREATE", dados);
             if(!response.ok)
@@ -41,39 +56,37 @@ function BookCreate() {
                                             <div className="form-body">
                                                 <div className="row">
                                                     <div className="col-sm-12">
-                                                        <h4 className="form-section"><i className="icon-grid"></i>Gênero</h4>
-                                                    </div>
-                                                    <div className="form-group col-sm-4">
-                                                        <Input label="Nome" required="true" type="text" placeholder="Nome" value={Name.value} setValue = {Name.setValue} onBlur={Name.onBlur} onChange={Name.onChange} error={Name.error}/>
-                                                    </div>
-                                                </div>
-
-                                                <div className="row">
-                                                    <div className="col-sm-12">
                                                         <h4 className="form-section"><i className="icon-books"></i>Livro</h4>
                                                     </div>
                                                     <div className="form-group col-sm-4">
-                                                        <Input label="Título" required="true" type="text" placeholder="Titulo" value={Title.value} setValue = {Title.setValue} onBlur={Title.onBlur} onChange={Title.onChange} error={Title.error}/>
+                                                        <Input label="Título" required="true" type="text" placeholder="Titulo"
+                                                        value={varTitle.value} setValue = {varTitle.setValue} onBlur={varTitle.onBlur}
+                                                        onChange={varTitle.onChange} error={varTitle.error}/>
                                                     </div>
                                                     <div className="form-group col-sm-4">
-                                                        <Input label="Autor" required="true" type="text" placeholder="Autor" value={Author.value} setValue = {Author.setValue} onBlur={Author.onBlur} onChange={Author.onChange} error={Author.error}/>
+                                                        <Input label="Autor" required="true" type="text" placeholder="Autor"
+                                                        value={varAuthor.value} setValue = {varAuthor.setValue} onBlur={varAuthor.onBlur}
+                                                        onChange={varAuthor.onChange} error={varAuthor.error}/>
                                                     </div>
                                                     <div className="form-group col-sm-2">
                                                         <label>Gênero <span className="text-danger">*</span></label>
-                                                        <select className="form-control required" id="cbGenres">
-                                                            {/**/}
+                                                        <select value={select} onChange={({target}) => setSelect(target.value)} className="form-control required" id="cbGenres">
+                                                            <option disabled value="0">Selecione</option>
+                                                            {Genres && Genres.map((val) => {
+                                                                return <option key={val.id} value={val.id}>{val.name}</option>;
+                                                            })}
                                                         </select>
                                                     </div>
                                                     <div className="form-group col-sm-2">
-                                                        <label>Data de Publicação <span className="text-danger">*</span></label>
-                                                        <input id="publication" type="date" className="form-control required"/>
+                                                        <Input label="Data de Publicação" required="true" type="date"
+                                                        value={varDate.value} setValue = {varDate.setValue} onBlur={varDate.onBlur}
+                                                        onChange={varDate.onChange} error={varDate.error}/>
                                                     </div>
                                                 </div>
                                                 <div className="row">
                                                     <div className="form-group col-sm-4">
-                                                        <label>ISBN</label>
-                                                        <input type="text" className="form-control" id="isbn" placeholder="ISBN"/>
-                                                        <input type="hidden" id="hiddenIsbn"/>
+                                                        <Input label="ISBN" type="text" placeholder="ISBN"
+                                                        value={varISBN.value} setValue = {varISBN.setValue}/>
                                                     </div>
                                                     <div className="col-sm-4 offset-sm-4">
                                                         <label>Imagem</label>
@@ -91,7 +104,7 @@ function BookCreate() {
 
                                             <div className="form-actions">
                                                 <button type="button" className="btn btn-success mr-1" id="btnSalvar"
-                                                    data-toggle="modal" data-target={Name.value==="" ? "":"#warning"} onClick={()=>Name.validate()}>
+                                                    data-toggle="modal" data-target={varTitle.value==="" ? "":"#warning"} onClick={()=>varTitle.validate()}>
                                                     <i className="icon-floppy-o"></i> Salvar
                                                 </button>
                                                 <Link to="/Book"><button type="button" className="btn btn-secundary" id="btnVoltar">

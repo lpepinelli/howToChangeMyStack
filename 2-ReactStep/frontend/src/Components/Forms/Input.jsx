@@ -3,7 +3,7 @@ import React from 'react'
 const Input = ({type, id, value, setValue, error, label, required, ...props}) => {
     return (
         <>
-            {label && <label>Nome {required && <span className="text-danger">*</span>}</label>}
+            {label && <label>{label} {required && <span className="text-danger">*</span>}</label>}
             <input
                 type={type}
                 className={'form-control '+(error && 'invalido')}
