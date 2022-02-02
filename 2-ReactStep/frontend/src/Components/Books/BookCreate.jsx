@@ -7,6 +7,7 @@ import useForm from '../Hooks/useForm';
 import useFetch from '../Hooks/useFetch';
 import WarningAlert from '../Alerts/WarningAlert';
 import ConfirmAlert from '../Alerts/ConfirmAlert';
+import Select from '../Forms/Select';
 
 function BookCreate() {
     const varTitle = useForm('Informe o Título');
@@ -16,6 +17,8 @@ function BookCreate() {
 
     const [select, setSelect] = React.useState("0");
     const [Genres, setGenres] = React.useState(null);
+    const [errorSelect, setErrorSelect] = React.useState(null);
+    const [errorForm, setErrorForm] = React.useState(true);
 
     const {loading, request, error} = useFetch();
 
@@ -29,6 +32,33 @@ function BookCreate() {
         }
         fetchBooks("https://localhost:5002/api/Genre");
     },[])
+
+    async function validSelect(value){
+        if (value === "0") {
+            setErrorSelect("Informe o Gênero.");
+        return false;
+        } else {
+            setErrorSelect(null);
+        return true;
+        }
+    }
+
+    function handleChange({ target }){
+        if (errorSelect) validSelect(target.value);
+        setSelect(target.value);
+    }
+
+    async function validForm(){
+        varTitle.validate();
+        varAuthor.validate();
+        varDate.validate();
+        validSelect(select);
+
+        varTitle.validate() &&
+        varAuthor.validate() &&
+        varDate.validate() &&
+        validSelect(select) ? setErrorForm(false) : setErrorForm(true);
+    }
 
     async function handleClick(){
         if (varTitle.validate() && varAuthor.validate() && varDate.validate()) {
@@ -69,13 +99,9 @@ function BookCreate() {
                                                         onChange={varAuthor.onChange} error={varAuthor.error}/>
                                                     </div>
                                                     <div className="form-group col-sm-2">
-                                                        <label>Gênero <span className="text-danger">*</span></label>
-                                                        <select value={select} onChange={({target}) => setSelect(target.value)} className="form-control required" id="cbGenres">
-                                                            <option disabled value="0">Selecione</option>
-                                                            {Genres && Genres.map((val) => {
-                                                                return <option key={val.id} value={val.id}>{val.name}</option>;
-                                                            })}
-                                                        </select>
+                                                        <Select label="Gênero" required="true" value={select}
+                                                         onChange={handleChange}
+                                                         onBlur={()=> validSelect(select)} error={errorSelect} data={Genres}/>
                                                     </div>
                                                     <div className="form-group col-sm-2">
                                                         <Input label="Data de Publicação" required="true" type="date"
@@ -104,7 +130,7 @@ function BookCreate() {
 
                                             <div className="form-actions">
                                                 <button type="button" className="btn btn-success mr-1" id="btnSalvar"
-                                                    data-toggle="modal" data-target={varTitle.value==="" ? "":"#warning"} onClick={()=>varTitle.validate()}>
+                                                    data-toggle="modal" data-target={errorForm ? "":"#warning"} onClick={()=>validForm()}>
                                                     <i className="icon-floppy-o"></i> Salvar
                                                 </button>
                                                 <Link to="/Book"><button type="button" className="btn btn-secundary" id="btnVoltar">
