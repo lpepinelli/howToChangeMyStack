@@ -8,6 +8,7 @@ import useFetch from '../Hooks/useFetch';
 import WarningAlert from '../Alerts/WarningAlert';
 import ConfirmAlert from '../Alerts/ConfirmAlert';
 import Select from '../Forms/Select';
+import NumberFormat from 'react-number-format';
 
 function BookCreate() {
     const varTitle = useForm('Informe o Título');
@@ -111,9 +112,11 @@ function BookCreate() {
                                                 </div>
                                                 <div className="row">
                                                     <div className="form-group col-sm-4">
-                                                        <Input label="ISBN" type="text" placeholder="ISBN"
-                                                        value={varISBN.value} setValue = {varISBN.setValue}/>
+                                                        <label>ISBN</label>
+                                                        <NumberFormat format="#-####-####-#" className="form-control" type="text"
+                                                        placeholder="ISBN" value={varISBN.value} onChange={varISBN.onChange} />
                                                     </div>
+                                                        <p>{varISBN.value}</p>
                                                     <div className="col-sm-4 offset-sm-4">
                                                         <label>Imagem</label>
                                                         <input type="file" className="form-control" name="inpFile" id="inpFile"/>
