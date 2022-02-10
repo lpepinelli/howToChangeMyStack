@@ -21,7 +21,7 @@ namespace backend.DAL
 
         public MySQLPersistence(bool closeConnection = true, bool withTransaction = false)
         {
-           string strCon = @"server=localhost;user=root;database=1.stack;port=3306;password=153624";
+           string strCon = Environment.GetEnvironmentVariable("MYSQL_CONNECTIONSTRING");
 
             _connection = new MySqlConnection(strCon);
 

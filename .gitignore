@@ -11,6 +11,9 @@ nupkg/
 # Rider
 .idea
 
+# Environment Variables
+*.env
+
 # User-specific files
 *.suo
 *.user
