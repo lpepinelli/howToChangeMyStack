@@ -47,22 +47,31 @@ const useFetch = () => {
         let response, json, message, error;
         try{
             setError(null);
+            error=null;
             setLoading(true);
             response = await fetch(url, options);
             setMessage(messages[response.status]);
+            message = messages[response.status];
             json = await response.json();
             if(!response.ok){
                 setError({
                     message: "StatusCode: "+message+" | Error: "+json.title,
                     errors: json.errors
                 });
+                error = {
+                    message: "StatusCode: "+message+" | Error: "+json.title,
+                    errors: json.errors
+                };
             }
         }
         catch(erro){
             json = null;
             setMessage(messages[response.status]);
+            message = messages[response.status];
             setError("StatusCode: "+message+
             "\n"+erro);
+            error = "StatusCode: "+message+
+            "\n"+erro;
         }
         finally{
             setData(json);

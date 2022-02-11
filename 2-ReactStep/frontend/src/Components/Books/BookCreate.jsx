@@ -14,24 +14,25 @@ function BookCreate() {
     const varTitle = useForm('Informe o Título');
     const varAuthor = useForm('Informe o Autor');
     const varDate = useForm('Informe a Data de Publicação');
-    const varISBN = useForm();
+    //const varISBN = useForm();
 
     const [select, setSelect] = React.useState("0");
     const [Genres, setGenres] = React.useState(null);
+    const [ISBN, setISBN] = React.useState("");
     const [errorSelect, setErrorSelect] = React.useState(null);
     const [errorForm, setErrorForm] = React.useState(true);
 
     const {loading, request, error} = useFetch();
 
     React.useEffect(()=>{
-        async function fetchBooks(url){
+        async function fetchGenres(url){
             const {response, json, error} = await request(url, "READ");
             if(response.ok)
                 setGenres(json);
             else
                 console.error(error);
         }
-        fetchBooks("https://localhost:5002/api/Genre");
+        fetchGenres("https://localhost:5002/api/Genre");
     },[])
 
     async function validSelect(value){
@@ -61,13 +62,82 @@ function BookCreate() {
         validSelect(select) ? setErrorForm(false) : setErrorForm(true);
     }
 
+    const inpFile = React.useRef(null);
+    const previewContainer = React.useRef(null);
+    const previewImage = React.useRef(null);
+    const previewDefaultText = React.useRef(null);
+    const [imgLoad, setImgLoad] = React.useState("");
+
+    function handleChangeImg(target){
+        const file = target.files[0];
+
+        if(file){
+            const reader = new FileReader();
+
+            previewDefaultText.current.style.display = "none";
+            previewImage.current.style.display = "block";
+
+            reader.addEventListener("load", function(){
+                previewImage.current.setAttribute("src", this.result);
+            });
+
+            reader.readAsDataURL(file);
+        }
+        else{
+            inpFile.current.value = "";
+            previewDefaultText.current.style.display = null;
+            previewImage.current.style.display = null;
+            previewImage.current.setAttribute("src", "");
+            setImgLoad("");
+        }
+        setImgLoad(file.name);
+    }
+
+    function resetImage(){
+        inpFile.current.value = "";
+        previewDefaultText.current.style.display = null;
+        previewImage.current.style.display = null;
+        previewImage.current.setAttribute("src", "");
+        setImgLoad("");
+    }
+
+    async function saveImage(bk_id){
+        let formData = new FormData();
+        let auxName="";
+
+        auxName = bk_id+"-"+imgLoad;
+        formData.append("files", inpFile.current.files[0], auxName);
+
+        const options= {
+            method: "POST",
+            body: formData,
+            processData: false,
+            contentType: false,
+        }
+
+        const {response, json, error} = await request("https://localhost:5002/api/Book/Image", "CREATE", null, options);
+        if(response.ok)
+            console.log(json);
+        else
+            console.log(error);
+    }
+
     async function handleClick(){
         if (varTitle.validate() && varAuthor.validate() && varDate.validate()) {
             var dados = {
-                name: varTitle.value
+                title: varTitle.value,
+                author: varAuthor.value,
+                cover: imgLoad,
+                genre: {
+                    id: select
+                },
+                isbn: ISBN,
+                publication: varDate.value
             }
-            const {response, error} = await request("https://localhost:5002/api/Book", "CREATE", dados);
-            if(!response.ok)
+            const {response, json, error} = await request("https://localhost:5002/api/Book", "CREATE", dados);
+            if(response.ok)
+                saveImage(json.id);
+            else
                 console.log(error);
         }
     }
@@ -114,18 +184,18 @@ function BookCreate() {
                                                     <div className="form-group col-sm-4">
                                                         <label>ISBN</label>
                                                         <NumberFormat format="#-####-####-#" className="form-control" type="text"
-                                                        placeholder="ISBN" value={varISBN.value} onChange={varISBN.onChange} />
+                                                        placeholder="ISBN" value={ISBN}
+                                                        onValueChange={(values)=> setISBN(values.value)} />
                                                     </div>
-                                                        <p>{varISBN.value}</p>
                                                     <div className="col-sm-4 offset-sm-4">
                                                         <label>Imagem</label>
-                                                        <input type="file" className="form-control" name="inpFile" id="inpFile"/>
-                                                        <div className="image-preview" id="imagePreview">
-                                                            <img src="" alt="Preview" className="image-preview__image"/>
-                                                            <span className="image-preview__default-text">Pré-Visualização</span>
+                                                        <input type="file" className="form-control" name="inpFile" id="inpFile" ref={inpFile} onChange={({target}) => handleChangeImg(target)}/>
+                                                        <div className="image-preview" id="imagePreview" ref={previewContainer}>
+                                                            <img src="" alt="Preview" className="image-preview__image" ref={previewImage}/>
+                                                            <span className="image-preview__default-text" ref={previewDefaultText}>Pré-Visualização</span>
                                                         </div>
                                                         <div id="remover" style={{marginTop: "4px"}}>
-
+                                                            {imgLoad && <button type="button" onClick={resetImage} class="btn btn-danger btn-block">Remover</button>}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -149,7 +219,7 @@ function BookCreate() {
                 </section>
             </div>
             <WarningAlert onClick={handleClick} type="save"/>
-            <ConfirmAlert redirect="/Book"/>
+            <ConfirmAlert redirect="/"/>
         </>
     )
 }

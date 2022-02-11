@@ -16,7 +16,7 @@ const Genre = () => {
     const {id} = useParams();
 
     React.useEffect(()=>{
-        async function fetchGenres(url){
+        async function fetchGenre(url){
             const {response, json, error} = await request(url, "READ");
             if(response.ok){
                 setGenre(json);
@@ -25,7 +25,7 @@ const Genre = () => {
             else
                 console.error(error);
         }
-        fetchGenres("https://localhost:5002/api/Genre/"+id);
+        fetchGenre("https://localhost:5002/api/Genre/"+id);
     },[])
 
     async function handleClick(){

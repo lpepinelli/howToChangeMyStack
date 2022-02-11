@@ -107,7 +107,9 @@ namespace backend.Controllers
         public IActionResult DeleteBook(int id)
         {
             Control.BookControl objBook = new Control.BookControl();
+            Control.ImageControl objImage = new Control.ImageControl(hostingEnvironment);
             var Book = objBook.Read(id);
+            objImage.DeleteFile(Book.id + "-"+ Book.cover);
             string msg = null;
             bool result;
             if (Book == null)
