@@ -91,7 +91,7 @@ function BookCreate() {
         varAuthor.validate();
         varDate.validate();
         validSelect(select);
-        setEdit(false); /*copy this to use effect*/
+        setEdit(false);
     }
 
     async function validSelect(value){
