@@ -206,7 +206,7 @@ function BookCreate() {
                                                     data-toggle="modal" data-target={errorForm ? "":"#warning"} onClick={()=>validForm()}>
                                                     <i className="icon-floppy-o"></i> Salvar
                                                 </button>
-                                                <Link to="/Book"><button type="button" className="btn btn-secundary" id="btnVoltar">
+                                                <Link to="/"><button type="button" className="btn btn-secundary" id="btnVoltar">
                                                     <i className="icon-arrow-left4"></i> Voltar
                                                 </button></Link>
                                             </div>

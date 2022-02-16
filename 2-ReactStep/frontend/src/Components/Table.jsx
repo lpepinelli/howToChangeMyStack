@@ -5,7 +5,7 @@ import styles from './Table.module.css'
 const Table = ({headers, data, entity}) => {
     return (
         <div className="table-responsive">
-            <table className="table" table-hover table-bordered>
+            <table className="table table-hover table-bordered">
                 <thead className="thead-inverse">
                     <tr>
                         <th scope="col" className={styles.center}>Código</th>

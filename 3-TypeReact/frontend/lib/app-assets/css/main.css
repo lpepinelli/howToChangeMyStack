@@ -1,0 +1,188 @@
+#divLoading {
+    /*background-color: rgba(0, 0, 0, 0.4);*/
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  .fakeDisabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .centro {
+      vertical-align: middle !important;
+      text-align: center !important;
+  }
+  .invalido {
+      border-color: #DA4453 !important;
+  }
+  .invalido-tr {
+      border: 3px solid #DA4453 !important;
+  }
+
+  .invisivel {
+      display: none;
+  }
+
+  .modal-confirm {
+      color: #636363;
+      width: 400px;
+  }
+
+      .modal-confirm .modal-content {
+          padding: 20px;
+          border-radius: 5px;
+          border: 1px solid lightgray;
+          text-align: center;
+          font-size: 14px;
+      }
+
+      .modal-confirm .modal-header {
+          border-bottom: none;
+          position: relative;
+      }
+
+      .modal-confirm h4 {
+          text-align: center;
+          font-size: 26px;
+          margin: 30px 0 -10px;
+      }
+
+      .modal-confirm .close {
+          position: absolute;
+          top: -5px;
+          right: -2px;
+      }
+
+      .modal-confirm .modal-body {
+          color: #999;
+      }
+
+      .modal-confirm .modal-footer {
+          border: none;
+          text-align: center;
+          border-radius: 5px;
+          font-size: 13px;
+          padding: 10px 15px 25px;
+      }
+
+          .modal-confirm .modal-footer a {
+              color: #999;
+          }
+
+      .modal-confirm .box-icon-danger {
+          width: 80px;
+          height: 80px;
+          margin: 0 auto;
+          border-radius: 50%;
+          z-index: 9;
+          text-align: center;
+          border: 3px solid #f15e5e;
+      }
+
+          .modal-confirm .box-icon-danger i {
+              color: #f15e5e;
+              font-size: 46px;
+              display: inline-block;
+              margin-top: 13px;
+          }
+
+      .modal-confirm .box-icon-warning {
+          width: 80px;
+          height: 80px;
+          margin: 0 auto;
+          border-radius: 50%;
+          z-index: 9;
+          text-align: center;
+          border: 3px solid #F1E05A;
+      }
+
+          .modal-confirm .box-icon-warning i {
+              color: #F1E05A;
+              font-size: 46px;
+              display: inline-block;
+              margin-top: 13px;
+          }
+
+      .modal-confirm .box-icon-confirm {
+          width: 80px;
+          height: 80px;
+          margin: 0 auto;
+          border-radius: 50%;
+          z-index: 9;
+          text-align: center;
+          border: 3px solid #82CE34;
+      }
+
+          .modal-confirm .box-icon-confirm i {
+              color: #82CE34;
+              font-size: 46px;
+              display: inline-block;
+              margin-top: 13px;
+          }
+
+      .modal-confirm .btn {
+          color: #fff;
+          border-radius: 4px;
+          background: #60c7c1;
+          text-decoration: none;
+          transition: all 0.4s;
+          line-height: normal;
+          min-width: 120px;
+          border: none;
+          min-height: 40px;
+          border-radius: 3px;
+          margin: 0 5px;
+          outline: none !important;
+      }
+
+      .modal-confirm .btn-info {
+          background: #c1c1c1;
+      }
+
+          .modal-confirm .btn-info:hover, .modal-confirm .btn-info:focus {
+              background: #a8a8a8;
+          }
+
+      .modal-confirm .btn-danger {
+          background: #f15e5e;
+      }
+
+          .modal-confirm .btn-danger:hover, .modal-confirm .btn-danger:focus {
+              background: #ee3535;
+          }
+
+      .modal-confirm .btn-alert {
+          background: #F1E05A;
+      }
+
+          .modal-confirm .btn-alert:hover, .modal-confirm .btn-alert:focus {
+              background: #E0CE46
+          }
+
+      .modal-confirm .btn-confirm {
+          background: #37BC9B;
+      }
+
+          .modal-confirm .btn-confirm:hover, .modal-confirm .btn-confirm:focus {
+              background: #48CFAD;
+          }
+          .image-preview{
+            /*width: 470px;*/
+            min-height: 200px;
+            border: 1px solid #dddddd;
+            margin-top: 15px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: large;
+            color: #cccccc;
+        }
+
+        .image-preview__image{
+            display: none;
+            width: 100%;
+        }
