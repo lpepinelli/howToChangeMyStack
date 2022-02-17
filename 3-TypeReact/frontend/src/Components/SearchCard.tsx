@@ -13,7 +13,7 @@ type propsTypes = {
     entity: string
 }
 
-const SearchCard = (props: React.PropsWithChildren<propsTypes>) => {
+const SearchCard = (props: propsTypes) => {
     const [search, setSearch] = React.useState('');
     const [filter, setFilter] = React.useState(props.filters[0]);
     const [data, setData] = React.useState(props.data); //idk why this state dont get the initial value
