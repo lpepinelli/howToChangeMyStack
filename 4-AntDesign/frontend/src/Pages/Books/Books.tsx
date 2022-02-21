@@ -2,6 +2,7 @@ import React from 'react';
 import { Typography } from 'antd'
 import SearchCard from '../../Components/SearchCard';
 import useFetch from '../../Hooks/useFetch';
+import Head from '../../Components/Head';
 
 const {Title} = Typography;
 
@@ -33,7 +34,8 @@ const Books = () => {
 
   return (
       <>
-        <Title level={3}>Consulta Livros</Title>
+        <Head title="Consulta | Livros"/>
+        <Title level={3}>Consulta - Livros</Title>
         <SearchCard headers={[
             {
                 title: 'Título',
@@ -42,7 +44,7 @@ const Books = () => {
             },
             {
                 title: 'Gênero',
-                dataIndex: ["genre", "name"],
+                dataIndex: 'genre',
                 key: 'genre',
             },
             {
@@ -61,7 +63,12 @@ const Books = () => {
                 value: 'genre'
             }
         ]}
-        data={books}
+        data={books.map((book:bookTypes)=>{
+            return {id: book.id,
+                    title: book.title,
+                    genre: book.genre.name,
+                    author: book.author}
+        })}
         entity="Book"
         loading={loading} />
       </>

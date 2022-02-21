@@ -30,7 +30,7 @@ function App() {
             <Menu.Item key="genres" icon={<BarsOutlined />}><NavLink to="/Genre">Gêneros</NavLink></Menu.Item>
           </Menu>
         </Header>
-        <Content style={{ padding: '10px 30px' }}>
+        <Content style={{ padding: '10px 30px', minHeight: '100%'}}>
           <Routes>
                 <Route path="/" element={<Books/>}/>
                 <Route path="Book/Details/:id" element={<Book/>}/>

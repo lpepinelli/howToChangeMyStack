@@ -16,7 +16,11 @@ type propsTypes = {
 const SearchCard = (props: propsTypes) => {
     const [search, setSearch] = React.useState('');
     const [filter, setFilter] = React.useState(props.filters[0]);
-    const [data, setData] = React.useState(props.data); //idk why this state dont get the initial value
+    const [data, setData] = React.useState<typeof props.data>([]);
+
+    React.useEffect(()=>{
+        setData(props.data);
+    },[props.data])
 
     function Search(){
         setData(props.data.filter(el => el[filter.property].toLowerCase().indexOf(search.toLowerCase()) > -1))

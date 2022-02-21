@@ -2,6 +2,7 @@ import React from 'react'
 import { EyeOutlined, PlusOutlined } from '@ant-design/icons';
 import { Card, Input, Select, Button, Table } from 'antd'
 import { ColumnsType } from 'antd/es/table';
+import { Link } from 'react-router-dom';
 
 const { Search } = Input;
 
@@ -23,11 +24,19 @@ type propTypes = {
 const SearchCard = ({headers, filters, data, entity, loading}: propTypes) => {
 
   const [filter, setFilter] = React.useState(filters[0]);
-  const [dataFilter, setDataFilter] = React.useState(data);
+  const [dataFilter, setDataFilter] = React.useState<typeof data>([]);
+  const [loadingSearch, setLoadingSearch] = React.useState(false)
+
+  React.useEffect(()=>{
+    setDataFilter(data);
+},[data])
 
   function onSearch(value:string){
-    console.log(value);
-    //setData(props.data.filter(el => el[filter.property].toLowerCase().indexOf(search.toLowerCase()) > -1))
+    setLoadingSearch(true);
+    setTimeout(function() {
+      setDataFilter(data.filter(el => el[filter.value].toLowerCase().indexOf(value.toLowerCase()) > -1))
+      setLoadingSearch(false);
+    }, 250);
   }
     interface User {
       key: number;
@@ -44,7 +53,7 @@ const SearchCard = ({headers, filters, data, entity, loading}: propTypes) => {
       title: 'Detalhes',
       key: 'details',
       render: (text :any, record :any) => (
-        <Button type="default" icon={<EyeOutlined />}></Button>
+        <Link to={`/${entity}/Details/${record.id}`}><Button type="default" icon={<EyeOutlined />}></Button></Link>
       ),
       align: 'center'
     },]
@@ -59,10 +68,10 @@ const SearchCard = ({headers, filters, data, entity, loading}: propTypes) => {
             options={filters}>
             </Select>
             <Search placeholder={`Pesquisa por ${filter.label}`} size="large" onSearch={onSearch} style={{ maxWidth: 600 }} />
-            <Button type="primary" size="large" style={{marginLeft: 10}} icon={<PlusOutlined />}></Button>
+            <Link to={`/${entity}/Create`}><Button type="primary" size="large" style={{marginLeft: 10}} icon={<PlusOutlined />}></Button></Link>
           </Input.Group>
         }>
-            <Table dataSource={data} rowKey="id" columns={columns} loading={loading} bordered={true} pagination={false}/>
+            <Table dataSource={dataFilter} rowKey="id" columns={columns} loading={loadingSearch ? loadingSearch:loading} bordered={true} pagination={false}/>
         </Card>
     </>
   )
