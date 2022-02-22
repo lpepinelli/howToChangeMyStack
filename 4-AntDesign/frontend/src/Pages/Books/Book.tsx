@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom'
 
-function BookCreate() {
+const Book = () => {
     return (
         <>
             <h1>Book</h1>
@@ -9,4 +9,4 @@ function BookCreate() {
     )
 }
 
-export default BookCreate
+export default Book

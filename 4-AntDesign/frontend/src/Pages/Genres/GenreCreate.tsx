@@ -1,13 +1,11 @@
-import React from 'react';
-import { ArrowLeftOutlined, BarsOutlined, ExclamationCircleOutlined, SaveOutlined } from '@ant-design/icons';
-import { Card, Divider, Space, Typography, Form, Input, Button, Modal } from 'antd';
+import { ArrowLeftOutlined, BarsOutlined, SaveOutlined } from '@ant-design/icons';
+import { Card, Divider, Space, Typography, Form, Input, Button } from 'antd';
 import { Link } from 'react-router-dom';
 import Head from '../../Components/Head';
-import { useNavigate  } from 'react-router-dom';
 import useFetch from '../../Hooks/useFetch';
+import useMessage from '../../Hooks/useMessage';
 
 const {Title} = Typography
-const { confirm, success} = Modal;
 
 const layout = {
     labelCol: { span: 8 },
@@ -19,42 +17,19 @@ const layout = {
 
 function GenreCreate() {
 
-    type errorType=string|object
-
     const [form] = Form.useForm();
     const {request} = useFetch();
-    const navigate = useNavigate();
+    const {resultMessage, confirmMessage} = useMessage('/Genre');
 
-    function resultMessage(error=null){
-        if(!error)
-            success({
-                content: 'Registro incluído com sucesso.',
-                onOk(){
-                    navigate('/Genre')
-                }
-            });
-        else
-            Modal.error({
-                    content: 'Erro!:'+error,
-                    onOk(){
-                        navigate('/Genre')
-                    }
-                });
+    const onFinish = (values: any) => {
+        confirmMessage(
+            'save',
+            async function(){
+                const { response, error } = await request("https://localhost:5002/api/Genre", "CREATE", values)
+                response.ok ? resultMessage('save') : resultMessage('save', error)
+            }
+        )
     }
-
-      const onFinish = (values: any) => {
-        confirm({
-            title: 'Atenção!',
-            icon: <ExclamationCircleOutlined />,
-            content: 'Deseja salvar o registro ?',
-            onOk() {
-                return request("https://localhost:5002/api/Genre", "CREATE", values)
-                .catch((error) => resultMessage(error))
-                .finally(() => resultMessage())
-            },
-            onCancel() {},
-          });
-      };
 
     return (
         <>
