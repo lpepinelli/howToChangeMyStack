@@ -72,7 +72,7 @@ const Genre = () => {
 
     return (
         <>
-        <Head title="Cadastro | Gêneros"/>
+        <Head title="Detalhes | Gêneros"/>
         <Card>
             <Space>
                 <Title level={4}><BarsOutlined /></Title>

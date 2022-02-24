@@ -18,7 +18,6 @@ import GenreCreate from './Pages/Genres/GenreCreate';
 
 const { Header, Content, Footer } = Layout;
 
-
 function App() {
   return (
   <>

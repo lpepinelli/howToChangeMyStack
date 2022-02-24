@@ -4,9 +4,13 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
 
+const validateMessages = {
+  required: "Por favor, insira o campo '${label}'",
+};
+
 ReactDOM.render(
   <React.StrictMode>
-    <ConfigProvider locale={ptBR}>
+    <ConfigProvider locale={ptBR} form={{ validateMessages  }}>
       <App />
     </ConfigProvider>
   </React.StrictMode>,

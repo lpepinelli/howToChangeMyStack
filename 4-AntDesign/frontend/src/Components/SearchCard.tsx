@@ -58,12 +58,11 @@ const SearchCard = ({headers, filters, data, entity, loading}: propTypes) => {
       align: 'center'
     },]
 
-
   return (
     <>
         <Card title={
             <Input.Group compact>
-            <Select defaultValue="title"
+            <Select defaultValue={filter.value}
             size="large" onChange={(value)=>setFilter(filters.filter(el => el.value == value)[0])}
             options={filters}>
             </Select>
