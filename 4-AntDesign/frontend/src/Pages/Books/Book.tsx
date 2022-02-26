@@ -1,4 +1,4 @@
-import { ArrowLeftOutlined, BookFilled, PlusOutlined, SaveOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, BookFilled, DeleteOutlined, EditOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
 import { Card, Divider, Space, Typography, Form, Input, Button, Row, Col, Select, DatePicker, Upload } from 'antd';
 import React from 'react';
 import {MaskedInput} from 'antd-mask-input'
@@ -6,6 +6,7 @@ import Head from '../../Components/Head';
 import useFetch from '../../Hooks/useFetch';
 import useMessage from '../../Hooks/useMessage';
 import { useParams, Link } from 'react-router-dom'
+import moment from 'moment';
 
 const {Title} = Typography
 
@@ -49,7 +50,7 @@ const Book = () => {
     },[])
 
     React.useEffect(()=>{
-        async function fetchGenre(url:string){
+        async function fetchBook(url:string){
             const {response, json, error} = await request(url, "READ");
             if(response.ok){
                 setBook(json);
@@ -58,28 +59,120 @@ const Book = () => {
                 form.setFieldsValue({ author: json.author });
                 form.setFieldsValue({ genre: json.genre.id });
                 form.setFieldsValue({ isbn: json.isbn });
-                form.setFieldsValue({ publication: json.publication });
+                setIsbnRaw(json.isbn);
+                form.setFieldsValue({ publication: moment(json.publication) });
+                let imgUrl: string = await getCover(json.id+"-"+json.cover);
+                console.error("setFields")
+                console.log(imgUrl);
+                form.setFieldsValue({ cover: [{
+                    uid: '-1',
+                    name: json.cover,
+                    status: 'done',
+                    thumbUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFYAAABWCAYAAABVVmH3AAAAAXNSR0IArs4c6QAAASlJREFUeF7t1EENwDAMBMGETVQA5c+slYLB+xsD2Mfo5H2e91tuXGCDHTe9QbCNK9jIFSzYSiDq+rFgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eo+wNtqoOxf2HTkwAAAABJRU5ErkJggg=="
+                  }] });
             }
             else
                 console.error(error);
         }
-        fetchGenre("https://localhost:5002/api/Book/"+id);
+        fetchBook("https://localhost:5002/api/Book/"+id);
     },[])
 
+    function imageToDataUri(img: string | ArrayBuffer | CanvasImageSource | null) {
+
+        // create an off-screen canvas
+        var canvas = document.createElement('canvas'),
+            ctx = canvas.getContext('2d');
+
+        // set its dimension to target size
+        canvas.width = 86;
+        canvas.height = 86;
+
+        // draw source image into the off-screen canvas:
+        if(img!=null)
+            ctx!.drawImage(img as CanvasImageSource, 0, 0, 86, 86);
+
+        // encode image to data-uri with base64 version of compressed image
+        return canvas.toDataURL();
+    }
+
+    async function getCover(fileName:string) {
+        const response = await fetch("https://localhost:5002/api/Book/GetImage", {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json; charset=utf-8"
+            },
+            body: JSON.stringify(fileName)
+        });
+
+        if(response.ok){
+            const blob = await response.blob();
+
+            const reader = new FileReader();
+            let Url = ""
+            reader.readAsDataURL(blob);
+            reader.onloadend = function() {
+                let img = new Image();
+                img.src = reader.result as string
+                console.log(reader.result);
+                Url = reader.result as string
+            }
+            return Url as string
+            /*reader.addEventListener("load", function(){
+                let img = new Image();
+                img.src = this.result as string
+                console.log(imageToDataUri(img))
+                Url = imageToDataUri(img).toString();
+                return Url
+            });
+            return reader.readAsDataURL(blob);*/
+        }
+        return ""
+    }
+
     function initState(){
-        /*
-        todo: initState
-        */
-        //form.setFieldsValue({ name: genre ? genre.name : ""});
+        form.setFieldsValue({ title: book ? book.title : "" });
+        form.setFieldsValue({ author: book ? book.author : "" });
+        form.setFieldsValue({ genre: book ? book.genre.id : 0 });
+        form.setFieldsValue({ isbn: book ? book.isbn : "" });
+        //form.setFieldsValue({ publication: book ? book.publication : "" });
         setEdit(false);
     }
 
+    async function saveImage(bk_id:number, file: File){
+        let formData = new FormData();
+        let auxName="";
+
+        auxName = bk_id+"-"+file.name;
+        formData.append("files", file, auxName);
+
+        const options= {
+            method: "POST",
+            body: formData,
+            processData: false,
+            contentType: false,
+        }
+
+        const {response, error} = await request("https://localhost:5002/api/Book/Image", "CREATE", null, options);
+        response.ok ? resultMessage('save') : resultMessage('save', error)
+    }
+
     const onFinish = (values: any) => {
+        let file:File
+        values.isbn = isbnRaw
+        values.publication = values.publication.toDate()
+        values.genre = {
+            id: values.genre
+        }
+        if(values.cover){
+            file = values.cover[0].originFileObj
+            values.cover = values.cover[0].name
+        }
         confirmMessage(
             'edit',
             async function(){
-                const { response, error } = await request("https://localhost:5002/api/Genre/"+id, "UPDATE", values)
-                response.ok ? resultMessage('edit') : resultMessage('edit', error)
+                const { response, error, json } = await request("https://localhost:5002/api/Book/"+id, "UPDATE", values)
+                response.ok ? values.cover ? saveImage(json.id, file) : resultMessage('edit') : resultMessage('edit', error)
             }
         )
     };
@@ -88,7 +181,7 @@ const Book = () => {
         confirmMessage(
             'delete',
             async function(){
-                const { json, response, error } = await request("https://localhost:5002/api/Genre/"+id, "DELETE")
+                const { json, response, error } = await request("https://localhost:5002/api/Book/"+id, "DELETE")
                 if(response.ok){
                     setEdit(false)
                     json.result ? resultMessage('delete') : resultMessage('delete', json.msg)
@@ -121,6 +214,9 @@ const Book = () => {
                 </Space>
                 <hr/>
                 <Form layout="vertical" form={form} name="control-hooks" onFinish={onFinish}>
+                    <Form.Item name="id" hidden={true}>
+                        <Input/>
+                    </Form.Item>
                     <Row gutter={18}>
                         <Col span={8}>
                             <Form.Item name="title" label="Título" rules={[{ required: true }]}>
@@ -165,7 +261,11 @@ const Book = () => {
                                 getValueFromEvent={normFile}
                                 >
                             <Upload name="logo"
-                                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                customRequest={({ file, onSuccess }) => {
+                                    setTimeout(() => {
+                                      onSuccess ? onSuccess("ok") : null
+                                    }, 0);
+                                  }}
                                 listType="picture-card"
                                 maxCount={1}>
                                 <div>
@@ -177,16 +277,34 @@ const Book = () => {
                         </Col>
                     </Row>
                     <Divider/>
-                    <Form.Item {...tailLayout}>
-                        <Space>
-                            <Button type="primary" htmlType="submit" icon={<SaveOutlined />}>
+                    <Row>
+                        <Col span={2}>
+                            <Button type="primary" style={!edit ? {display:"none"} : {display:"block"}} htmlType="submit" icon={<EditOutlined />}>
                                 Salvar
                             </Button>
-                            <Link to="/"><Button htmlType="button" icon={<ArrowLeftOutlined />}>
-                                Voltar
-                            </Button></Link>
-                        </Space>
-                    </Form.Item>
+                            <Button type="default" style={edit ? {display:"none"} : {display:"block"}} htmlType="button" icon={<EditOutlined />} onClick={()=>setEdit(true)}>
+                                Editar
+                            </Button>
+                        </Col>
+                        <Col span={2}>
+                            {edit ?
+                                <Button htmlType="button" icon={<ArrowLeftOutlined />} onClick={initState}>
+                                    Voltar
+                                </Button> :
+                                <Link to="/">
+                                    <Button htmlType="button" icon={<ArrowLeftOutlined />}>
+                                        Voltar
+                                    </Button>
+                                </Link>
+                            }
+
+                        </Col>
+                        <Col offset={18} span={2}>
+                            <Button type="primary" danger htmlType="button" icon={<DeleteOutlined />} onClick={handleDelete}>
+                                Excluir
+                            </Button>
+                        </Col>
+                    </Row>
                 </Form>
             </Card>
         </>

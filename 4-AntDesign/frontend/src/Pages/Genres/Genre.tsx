@@ -88,36 +88,34 @@ const Genre = () => {
                         <Input placeholder="Nome" disabled={!edit}/>
                     </Form.Item>
                     <Divider/>
-                        <Row>
-                            <Col span={2}>
-                                <Button type="primary" style={!edit ? {display:"none"} : {display:"block"}} htmlType="submit" icon={<EditOutlined />}>
-                                    Salvar
-                                </Button>
-                                <Button type="default" style={edit ? {display:"none"} : {display:"block"}} htmlType="button" icon={<EditOutlined />} onClick={()=>setEdit(true)}>
-                                    Editar
-                                </Button>
-                            </Col>
-                            <Col span={2}>
-                                {edit ?
-                                    <Button htmlType="button" icon={<ArrowLeftOutlined />} onClick={initState}>
+                    <Row>
+                        <Col span={2}>
+                            <Button type="primary" style={!edit ? {display:"none"} : {display:"block"}} htmlType="submit" icon={<EditOutlined />}>
+                                Salvar
+                            </Button>
+                            <Button type="default" style={edit ? {display:"none"} : {display:"block"}} htmlType="button" icon={<EditOutlined />} onClick={()=>setEdit(true)}>
+                                Editar
+                            </Button>
+                        </Col>
+                        <Col span={2}>
+                            {edit ?
+                                <Button htmlType="button" icon={<ArrowLeftOutlined />} onClick={initState}>
+                                    Voltar
+                                </Button> :
+                                <Link to="/Genre">
+                                    <Button htmlType="button" icon={<ArrowLeftOutlined />}>
                                         Voltar
-                                    </Button> :
-                                    <Link to="/Genre">
-                                        <Button htmlType="button" icon={<ArrowLeftOutlined />}>
-                                            Voltar
-                                        </Button>
-                                    </Link>
-                                }
+                                    </Button>
+                                </Link>
+                            }
 
-                            </Col>
-                            <Col offset={18} span={2}>
-                                <Button type="primary" danger htmlType="button" icon={<DeleteOutlined />} onClick={handleDelete}>
-                                    Excluir
-                                </Button>
-                            </Col>
-                        </Row>
-                    <Form.Item>
-                    </Form.Item>
+                        </Col>
+                        <Col offset={18} span={2}>
+                            <Button type="primary" danger htmlType="button" icon={<DeleteOutlined />} onClick={handleDelete}>
+                                Excluir
+                            </Button>
+                        </Col>
+                    </Row>
                 </Form>
             </Spin>
         </Card>

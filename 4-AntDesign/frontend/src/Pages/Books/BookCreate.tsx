@@ -50,7 +50,7 @@ const BookCreate = () => {
             contentType: false,
         }
 
-        const {response, json, error} = await request("https://localhost:5002/api/Book/Image", "CREATE", null, options);
+        const {response, error} = await request("https://localhost:5002/api/Book/Image", "CREATE", null, options);
         response.ok ? resultMessage('save') : resultMessage('save', error)
     }
 
@@ -66,7 +66,6 @@ const BookCreate = () => {
             file = values.cover[0].originFileObj
             values.cover = values.cover[0].name
         }
-        console.log(values);
         confirmMessage(
             'save',
             async function(){
@@ -142,7 +141,11 @@ const BookCreate = () => {
                                 getValueFromEvent={normFile}
                                 >
                             <Upload name="logo"
-                                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                customRequest={({ file, onSuccess }) => {
+                                    setTimeout(() => {
+                                      onSuccess ? onSuccess("ok") : null
+                                    }, 0);
+                                  }}
                                 listType="picture-card"
                                 maxCount={1}>
                                 <div>
