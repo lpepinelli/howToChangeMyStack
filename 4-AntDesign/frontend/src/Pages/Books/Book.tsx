@@ -16,7 +16,6 @@ const tailLayout = {
 
 const Book = () => {
 
-
     const [edit, setEdit] = React.useState(false)
     type bookTypes = {
         id: number,
@@ -62,13 +61,11 @@ const Book = () => {
                 setIsbnRaw(json.isbn);
                 form.setFieldsValue({ publication: moment(json.publication) });
                 let imgUrl: string = await getCover(json.id+"-"+json.cover);
-                console.error("setFields")
-                console.log(imgUrl);
                 form.setFieldsValue({ cover: [{
                     uid: '-1',
                     name: json.cover,
                     status: 'done',
-                    thumbUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFYAAABWCAYAAABVVmH3AAAAAXNSR0IArs4c6QAAASlJREFUeF7t1EENwDAMBMGETVQA5c+slYLB+xsD2Mfo5H2e91tuXGCDHTe9QbCNK9jIFSzYSiDq+rFgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eoa7FgI4Eo+wNtqoOxf2HTkwAAAABJRU5ErkJggg=="
+                    thumbUrl: imgUrl
                   }] });
             }
             else
@@ -77,22 +74,14 @@ const Book = () => {
         fetchBook("https://localhost:5002/api/Book/"+id);
     },[])
 
-    function imageToDataUri(img: string | ArrayBuffer | CanvasImageSource | null) {
-
-        // create an off-screen canvas
-        var canvas = document.createElement('canvas'),
-            ctx = canvas.getContext('2d');
-
-        // set its dimension to target size
-        canvas.width = 86;
-        canvas.height = 86;
-
-        // draw source image into the off-screen canvas:
-        if(img!=null)
-            ctx!.drawImage(img as CanvasImageSource, 0, 0, 86, 86);
-
-        // encode image to data-uri with base64 version of compressed image
-        return canvas.toDataURL();
+    async function getAsyncFile(blob: Blob){
+        return new Promise((resolve, reject) => {
+            var reader = new FileReader();
+            reader.onload = (event: any) => {
+                resolve(event.target.result);
+            };
+            reader.readAsDataURL(blob);
+        });
     }
 
     async function getCover(fileName:string) {
@@ -107,39 +96,31 @@ const Book = () => {
 
         if(response.ok){
             const blob = await response.blob();
-
-            const reader = new FileReader();
-            let Url = ""
-            reader.readAsDataURL(blob);
-            reader.onloadend = function() {
-                let img = new Image();
-                img.src = reader.result as string
-                console.log(reader.result);
-                Url = reader.result as string
-            }
+            const Url = await getAsyncFile(blob)
             return Url as string
-            /*reader.addEventListener("load", function(){
-                let img = new Image();
-                img.src = this.result as string
-                console.log(imageToDataUri(img))
-                Url = imageToDataUri(img).toString();
-                return Url
-            });
-            return reader.readAsDataURL(blob);*/
         }
         return ""
     }
 
-    function initState(){
-        form.setFieldsValue({ title: book ? book.title : "" });
-        form.setFieldsValue({ author: book ? book.author : "" });
-        form.setFieldsValue({ genre: book ? book.genre.id : 0 });
-        form.setFieldsValue({ isbn: book ? book.isbn : "" });
-        //form.setFieldsValue({ publication: book ? book.publication : "" });
+    async function initState(){
+        if(book){
+            form.setFieldsValue({ title: book.title });
+            form.setFieldsValue({ author: book.author });
+            form.setFieldsValue({ genre: book.genre.id });
+            form.setFieldsValue({ isbn: book.isbn });
+            form.setFieldsValue({ publication: moment(book.publication) });
+            let imgUrl: string = await getCover(book.id+"-"+book.cover);
+            form.setFieldsValue({ cover: [{
+                uid: '-1',
+                name: book.cover,
+                status: 'done',
+                thumbUrl: imgUrl
+              }] });
+        }
         setEdit(false);
     }
 
-    async function saveImage(bk_id:number, file: File){
+    async function updateImage(bk_id:number, previousImage:string, file:File){
         let formData = new FormData();
         let auxName="";
 
@@ -147,18 +128,19 @@ const Book = () => {
         formData.append("files", file, auxName);
 
         const options= {
-            method: "POST",
+            method: "PUT",
             body: formData,
             processData: false,
             contentType: false,
         }
 
-        const {response, error} = await request("https://localhost:5002/api/Book/Image", "CREATE", null, options);
-        response.ok ? resultMessage('save') : resultMessage('save', error)
+        const {response, error} = await request("https://localhost:5002/api/Book/Image?previousFile="+bk_id+"-"+previousImage, "CREATE", null, options);
+        response.ok ? resultMessage('edit') : resultMessage('edit', error)
     }
 
     const onFinish = (values: any) => {
         let file:File
+        let previousImage = book ? book.cover:"";
         values.isbn = isbnRaw
         values.publication = values.publication.toDate()
         values.genre = {
@@ -172,7 +154,7 @@ const Book = () => {
             'edit',
             async function(){
                 const { response, error, json } = await request("https://localhost:5002/api/Book/"+id, "UPDATE", values)
-                response.ok ? values.cover ? saveImage(json.id, file) : resultMessage('edit') : resultMessage('edit', error)
+                response.ok ? values.cover && values.cover != previousImage ? updateImage(values.id, previousImage, file) : resultMessage('edit') : resultMessage('edit', error)
             }
         )
     };
@@ -193,7 +175,7 @@ const Book = () => {
     }
 
     const normFile = (e: any) => {
-        console.log('Upload event:', e);
+        //console.log('Upload event:', e);
         if (Array.isArray(e)) {
         return e;
         }
@@ -220,12 +202,12 @@ const Book = () => {
                     <Row gutter={18}>
                         <Col span={8}>
                             <Form.Item name="title" label="Título" rules={[{ required: true }]}>
-                                <Input placeholder="Título"/>
+                                <Input placeholder="Título" disabled={!edit}/>
                             </Form.Item>
                         </Col>
                         <Col span={8}>
                             <Form.Item name="author" label="Autor" rules={[{ required: true }]}>
-                                <Input placeholder="Autor"/>
+                                <Input placeholder="Autor" disabled={!edit}/>
                             </Form.Item>
                         </Col>
                         <Col span={4}>
@@ -237,20 +219,21 @@ const Book = () => {
                                     value: 'id'
                                 }}
                                 options={genres}
+                                disabled={!edit}
                                 >
                                 </Select>
                             </Form.Item>
                         </Col>
                         <Col span={4}>
                             <Form.Item name="publication" label="Data de Publicação" rules={[{ required: true }]}>
-                                <DatePicker format={'DD/MM/YYYY'}/>
+                                <DatePicker format={'DD/MM/YYYY'} disabled={!edit}/>
                             </Form.Item>
                         </Col>
                     </Row>
                     <Row>
                         <Col span={8}>
                             <Form.Item name="isbn" label="ISBN" getValueFromEvent={normInptMask}>
-                                <MaskedInput mask="1-1111-1111-1" placeholder="ISBN"/>
+                                <MaskedInput mask="1-1111-1111-1" placeholder="ISBN" disabled={!edit}/>
                             </Form.Item>
                         </Col>
                         <Col span={8} offset={8}>
@@ -267,7 +250,8 @@ const Book = () => {
                                     }, 0);
                                   }}
                                 listType="picture-card"
-                                maxCount={1}>
+                                maxCount={1}
+                                disabled={!edit}>
                                 <div>
                                     <PlusOutlined />
                                     <div style={{ marginTop: 8 }}>Carregar</div>
