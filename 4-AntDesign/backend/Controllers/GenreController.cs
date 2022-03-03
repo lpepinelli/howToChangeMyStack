@@ -41,15 +41,15 @@ namespace backend.Controllers
                 return BadRequest();
             }
 
+            if (objGenre.Read(id) == null)
+                return NotFound();
+
             try
             {
                 objGenre.Update(Genre);
             }
             catch (Exception e)
             {
-                if (objGenre.Read(id) == null)
-                    return NotFound();
-                else
                     throw;
             }
 

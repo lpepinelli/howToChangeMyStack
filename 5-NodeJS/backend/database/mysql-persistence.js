@@ -1,30 +1,38 @@
 const mysql = require("mysql2/promise")
-
-let config ={
-  host     : 'localhost',
-  user     : 'root',
-  password : '153624',
-  database : '1.stack'
-}
+const config = require("../config")
+/*
+  let config ={
+    host     : '',
+    user     : '',
+    password : '',
+    database : ''
+  }
+*/
 
 //singleton
-async function connect(){
+async function connect(withTransaction){
     if(global.connection && !global.connection.connection._closing)
-        return global.connection;
+        return global.connection
 
-    const connection = await mysql.createConnection(config);
-    global.connection = connection;
-    return connection;
+    const connection = await mysql.createConnection(config)
+    if(withTransaction){
+      await connection.execute('SET TRANSACTION ISOLATION LEVEL READ COMMITTED')
+      await connection.beginTransaction()
+    }
+    global.connection = connection
+    return connection
 }
 
 async function select(query, conn, param=null){
-  const [rows] = await conn.query(query, param);
-  return rows;
+  const [rows] = await conn.query(query, param)
+  return rows
 }
 
 async function execute(query, conn, param){
-  const result = await conn.query(query, param);
-  return result[0].insertId;
+  const result = await conn.query(query, param)
+  const insertId = result[0].insertId
+  const affectedRows = result[0].affectedRows
+  return insertId > 0 ? insertId : affectedRows > 0 ? true : false
 }
 
 module.exports = {
