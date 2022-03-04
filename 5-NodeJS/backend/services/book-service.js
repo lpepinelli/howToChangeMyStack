@@ -1,10 +1,10 @@
-const genreDao = require('../database/genre-dal')
+const bookDao = require('../database/book-dal')
 const bdObj = require('../database/mysql-persistence')
 
-const listGenres = async () => {
+const listBooks = async () => {
     const conn = await bdObj.connect(false)
     try {
-        const result = await genreDao.listGenres(bdObj, conn)
+        const result = await bookDao.listBooks(bdObj, conn)
         conn.end()
         return result
     } catch(e) {
@@ -16,7 +16,7 @@ const listGenres = async () => {
 const read = async (id) => {
     const conn = await bdObj.connect(false)
     try {
-        const result = await genreDao.read(id, bdObj, conn)
+        const result = await bookDao.read(id, bdObj, conn)
         conn.end()
         return result
     } catch(e) {
@@ -25,10 +25,10 @@ const read = async (id) => {
     }
 }
 
-const create = async (genre) => {
+const create = async (book) => {
     const conn = await bdObj.connect(true)
     try {
-        const result = await genreDao.create(genre, bdObj, conn)
+        const result = await bookDao.create(book, bdObj, conn)
         if(result)
             conn.commit()
         conn.end()
@@ -40,10 +40,10 @@ const create = async (genre) => {
     }
 }
 
-const update = async (genre) => {
+const update = async (book) => {
     const conn = await bdObj.connect(true)
     try {
-        const result = await genreDao.update(genre, bdObj, conn)
+        const result = await bookDao.update(book, bdObj, conn)
         if(result)
             conn.commit()
         conn.end()
@@ -55,10 +55,10 @@ const update = async (genre) => {
     }
 }
 
-const delGenre = async (id) => {
+const delBook = async (id) => {
     const conn = await bdObj.connect(true)
     try {
-        const result = await genreDao.delGenre(id, bdObj, conn)
+        const result = await bookDao.delBook(id, bdObj, conn)
         if(result)
             conn.commit()
         conn.end()
@@ -71,9 +71,9 @@ const delGenre = async (id) => {
 }
 
 module.exports = {
-    listGenres,
+    listBooks,
     read,
     create,
     update,
-    delGenre
+    delBook
 }
