@@ -263,7 +263,7 @@ const Book = () => {
                     <Divider/>
                     <Row>
                         <Col span={2}>
-                            <Button type="primary" style={!edit ? {display:"none"} : {display:"block"}} htmlType="submit" icon={<EditOutlined />}>
+                            <Button type="primary" style={!edit ? {display:"none"} : {display:"block"}} htmlType="submit" icon={<SaveOutlined />}>
                                 Salvar
                             </Button>
                             <Button type="default" style={edit ? {display:"none"} : {display:"block"}} htmlType="button" icon={<EditOutlined />} onClick={()=>setEdit(true)}>

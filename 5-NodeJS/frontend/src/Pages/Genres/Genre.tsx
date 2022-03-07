@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeftOutlined, BarsOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, BarsOutlined, DeleteOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
 import { Card, Divider, Space, Typography, Form, Input, Button, Spin, Row, Col } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import Head from '../../Components/Head';
@@ -90,7 +90,7 @@ const Genre = () => {
                     <Divider/>
                     <Row>
                         <Col span={2}>
-                            <Button type="primary" style={!edit ? {display:"none"} : {display:"block"}} htmlType="submit" icon={<EditOutlined />}>
+                            <Button type="primary" style={!edit ? {display:"none"} : {display:"block"}} htmlType="submit" icon={<SaveOutlined />}>
                                 Salvar
                             </Button>
                             <Button type="default" style={edit ? {display:"none"} : {display:"block"}} htmlType="button" icon={<EditOutlined />} onClick={()=>setEdit(true)}>
