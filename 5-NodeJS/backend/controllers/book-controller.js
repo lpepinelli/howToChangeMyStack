@@ -61,7 +61,7 @@ const putBook = async (req, res, next) => {
                 id: req.body.genre.id
             },
             isbn  : req.body.isbn,
-            publication: req.body.publication
+            publication: new Date(req.body.publication.substring(0,9))
         }
         if (id != book.id)
             res.status(400).send({message: "'id' of url and request body must be the same"})
@@ -100,10 +100,22 @@ const deleteBook = async (req, res, next) => {
     }
 }
 
+const postImage = async (req, res, next) => {
+    try {
+        const file = req.body
+        console.log(file)
+        req.sendStatus(200)
+    } catch (error) {
+        res.status(500).json(error.message)
+        next(error)
+    }
+}
+
 module.exports = {
     getBooks,
     getBook,
     postBook,
     putBook,
-    deleteBook
+    deleteBook,
+    postImage
 }

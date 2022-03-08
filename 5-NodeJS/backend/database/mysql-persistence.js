@@ -14,7 +14,13 @@ async function connect(withTransaction){
     if(global.connection && !global.connection.connection._closing)
         return global.connection
 
-    const connection = await mysql.createConnection(config)
+    const connection = await mysql.createConnection({
+      host     : 'localhost',
+      user     : 'root',
+      database : '1.stack',
+      port     : '3306',
+      password : '153624'
+    })
     if(withTransaction){
       await connection.execute('SET TRANSACTION ISOLATION LEVEL READ COMMITTED')
       await connection.beginTransaction()

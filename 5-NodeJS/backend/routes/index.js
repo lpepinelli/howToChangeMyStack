@@ -19,5 +19,7 @@ router.post('/book', book.postBook)
 router.put('/book/:id', book.putBook)
 router.delete('/book/:id', book.deleteBook)
 
+router.post('/book/image', book.postImage)
+
 
 module.exports = router
