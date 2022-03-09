@@ -8,7 +8,7 @@ const listBooks = async (bdObj, conn) => {
             id: book.bk_id,
             title : book.title,
             author: book.author,
-            image : book.image,
+            cover : book.cover,
             genre : {
                 id: book.gr_id,
                 name: book.name
@@ -29,7 +29,7 @@ const read = async (id, bdObj, conn) => {
         id: book[0].bk_id,
         title : book[0].title,
         author: book[0].author,
-        image : book[0].image,
+        cover : book[0].cover,
         genre : {
             id: book[0].gr_id,
             name: book[0].name

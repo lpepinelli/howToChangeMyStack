@@ -95,7 +95,9 @@ const Book = () => {
         });
 
         if(response.ok){
+            console.log(response.body)
             const blob = await response.blob();
+            console.log(blob)
             const Url = await getAsyncFile(blob)
             return Url as string
         }
