@@ -85,17 +85,18 @@ const Book = () => {
     }
 
     async function getCover(fileName:string) {
+
         const response = await fetch("https://localhost:5002/api/Book/GetImage", {
             method: "POST",
             headers: {
                 "Accept": "application/json",
                 "Content-Type": "application/json; charset=utf-8"
             },
-            body: JSON.stringify(fileName)
+            body: JSON.stringify({fileName})
         });
 
         if(response.ok){
-            const blob = await response.blob();
+            const blob = await response.blob()
             const Url = await getAsyncFile(blob)
             return Url as string
         }
@@ -134,7 +135,7 @@ const Book = () => {
             contentType: false,
         }
 
-        const {response, error} = await request("https://localhost:5002/api/Book/Image?previousFile="+bk_id+"-"+previousImage, "CREATE", null, options);
+        const {response, error} = await request("https://localhost:5002/api/Book/Image/"+bk_id+"-"+previousImage, "CREATE", null, options);
         response.ok ? resultMessage('edit') : resultMessage('edit', error)
     }
 
@@ -263,7 +264,7 @@ const Book = () => {
                     <Divider/>
                     <Row>
                         <Col span={2}>
-                            <Button type="primary" style={!edit ? {display:"none"} : {display:"block"}} htmlType="submit" icon={<EditOutlined />}>
+                            <Button type="primary" style={!edit ? {display:"none"} : {display:"block"}} htmlType="submit" icon={<SaveOutlined />}>
                                 Salvar
                             </Button>
                             <Button type="default" style={edit ? {display:"none"} : {display:"block"}} htmlType="button" icon={<EditOutlined />} onClick={()=>setEdit(true)}>
