@@ -5,4 +5,4 @@ let config ={
     database : '1.stack'
   }
 
-  module.exports = config
+export default config

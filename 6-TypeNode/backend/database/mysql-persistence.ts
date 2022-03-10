@@ -1,5 +1,5 @@
-const mysql = require("mysql2/promise")
-const config = require("../config")
+import mysql from "mysql2/promise"
+import config from "../config"
 /*
   let config ={
     host     : '',
@@ -8,19 +8,16 @@ const config = require("../config")
     database : ''
   }
 */
+declare global {
+  var connection: mysql.Connection;
+}
 
 //singleton
-async function connect(withTransaction){
+async function connect(withTransaction: boolean){
     if(global.connection && !global.connection.connection._closing)
         return global.connection
 
-    const connection = await mysql.createConnection({
-      host     : 'localhost',
-      user     : 'root',
-      database : '1.stack',
-      port     : '3306',
-      password : '153624'
-    })
+    const connection = await mysql.createConnection(config)
     if(withTransaction){
       await connection.execute('SET TRANSACTION ISOLATION LEVEL READ COMMITTED')
       await connection.beginTransaction()
