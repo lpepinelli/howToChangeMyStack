@@ -8,11 +8,12 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-config/index.js
-!config/
 dist
 dist-ssr
 *.local
+
+# Environment Variables
+*.env
 
 # Editor directories and files
 .vscode/*
