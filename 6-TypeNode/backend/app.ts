@@ -1,8 +1,8 @@
-const express = require('express')
-var cors = require('cors')
-const path = require('path')
-const bodyParser = require('body-parser')
-const routes = require('./routes')
+import express from 'express'
+import path from 'path'
+import bodyParser from 'body-parser'
+import routes from './routes'
+import cors from 'cors'
 
 const app = express()
 
@@ -13,11 +13,11 @@ const corsOptions = {
 app.use(cors(corsOptions))
 
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.urlencoded({ extended:true }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/api', routes)
 
-module.exports = app
+export default app

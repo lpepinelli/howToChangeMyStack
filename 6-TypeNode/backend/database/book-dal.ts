@@ -2,19 +2,8 @@ import MysqlPersistence from '../database/mysql-persistence'
 
 type bookDalDTO = {
     id: number | string,
-    book: {
-        id: number | string,
-        title : string,
-        author: string,
-        cover : string,
-        genre : {
-            id: number | string,
-            name: string
-        },
-        isbn  : string,
-        publication: string
-    }
-    bdObj: MysqlPersistence,
+    book: book
+    dbObj: MysqlPersistence,
     conn: typeof globalThis.connection
 }
 
@@ -29,10 +18,10 @@ type tableType = {
     publication: string
 }
 
-const listBooks = async ({ bdObj, conn }: bookDalDTO) => {
+const listBooks = async ({ dbObj, conn }: Pick<bookDalDTO, "dbObj" | "conn">) => {
     const query = 'SELECT * FROM Book '+
                 'inner join Genre on Book.gr_id = Genre.gr_id'
-    const res = await bdObj.select({query, conn}) as any
+    const res = await dbObj.select({query, conn}) as any
     const books: bookDalDTO["book"][] = []
     res.forEach((book: tableType) => {
         books.push({
@@ -45,17 +34,17 @@ const listBooks = async ({ bdObj, conn }: bookDalDTO) => {
                 name: book.name
             },
             isbn  : book.isbn,
-            publication: book.publication
+            publication: new Date(book.publication)
         })
     });
     return books
 }
 
-const read = async ({ id, bdObj, conn }: bookDalDTO) => {
+const readBook = async ({ id, dbObj, conn }: Omit<bookDalDTO, "book">) => {
     const query = 'SELECT * FROM Book '+
                 'inner join Genre on Book.gr_id = Genre.gr_id ' +
                 'where bk_id = ?'
-    const book = await bdObj.select({query, conn, param: [id]}) as any
+    const book = await dbObj.select({query, conn, param: [id]}) as any
     const res : bookDalDTO["book"] = {
         id: book[0].bk_id,
         title : book[0].title,
@@ -66,27 +55,27 @@ const read = async ({ id, bdObj, conn }: bookDalDTO) => {
             name: book[0].name
         },
         isbn  : book[0].isbn,
-        publication: book[0].publication
+        publication: new Date(book.publication)
     }
     return res
 }
 
-const create = async ({ book, bdObj, conn }: bookDalDTO) => {
+const createBook = async ({ book, dbObj, conn }: Omit<bookDalDTO, "id">) => {
     const query = 'insert into Book (title, author, cover, gr_id, isbn, publication) values(?, ?, ?, ?, ?, ?)'
-    const res = await bdObj.execute({query, conn, param: [book.title, book.author, book.cover, book.genre.id, book.isbn, book.publication]})
+    const res = await dbObj.execute({query, conn, param: [book.title, book.author, book.cover, book.genre.id, book.isbn, book.publication]})
     book.id = res
     return book
 }
 
-const update = async ({ book, bdObj, conn }: bookDalDTO) => {
+const updateBook = async ({ book, dbObj, conn }: Omit<bookDalDTO, "id">) => {
     const query = 'update Book set title = ?, author = ?, cover = ?, '+
                 'gr_id = ?, isbn = ?, publication = ? where bk_id = ?'
-    const res = await bdObj.execute({query, conn, param: [book.title, book.author, book.cover, book.genre.id, book.isbn, book.publication, book.id]})
+    const res = await dbObj.execute({query, conn, param: [book.title, book.author, book.cover, book.genre.id, book.isbn, book.publication, book.id]})
     return res
 }
 
-const delBook = async ({ id, bdObj, conn }: bookDalDTO) => {
-    const res = await bdObj.execute({
+const delBook = async ({ id, dbObj, conn }: Omit<bookDalDTO, "book">) => {
+    const res = await dbObj.execute({
         query: 'delete from book where bk_id = ?',
         conn,
         param: [id]
@@ -94,10 +83,10 @@ const delBook = async ({ id, bdObj, conn }: bookDalDTO) => {
     return res
 }
 
-module.exports = {
+export default {
     listBooks,
-    read,
-    create,
-    update,
+    readBook,
+    createBook,
+    updateBook,
     delBook
 }

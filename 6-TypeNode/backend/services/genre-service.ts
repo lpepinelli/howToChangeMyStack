@@ -1,76 +1,78 @@
-const genreDao = require('../database/genre-dal')
-const bdObj = require('../database/mysql-persistence')
+import genreDao from '../database/genre-dal'
+import MysqlPersistence from '../database/mysql-persistence'
+
+const dbObj = new MysqlPersistence()
 
 const listGenres = async () => {
-    const conn = await bdObj.connect(false)
+    const conn = await dbObj.connect(false)
     try {
-        const result = await genreDao.listGenres(bdObj, conn)
-        conn.end()
+        const result = await genreDao.listGenres({dbObj, conn})
+        dbObj.close()
         return result
     } catch(e) {
-        conn.end()
-        throw new Error(e)
+        dbObj.close()
+        throw new Error(e as string)
     }
 }
 
-const read = async (id) => {
-    const conn = await bdObj.connect(false)
+const read = async (id: number | string) => {
+    const conn = await dbObj.connect(false)
     try {
-        const result = await genreDao.read(id, bdObj, conn)
-        conn.end()
+        const result = await genreDao.readGenre({id, dbObj, conn})
+        dbObj.close()
         return result
     } catch(e) {
-        conn.end()
-        throw new Error(e)
+        dbObj.close()
+        throw new Error(e as string)
     }
 }
 
-const create = async (genre) => {
-    const conn = await bdObj.connect(true)
+const create = async (genre: genre) => {
+    const conn = await dbObj.connect(true)
     try {
-        const result = await genreDao.create(genre, bdObj, conn)
+        const result = await genreDao.createGenre({genre, dbObj, conn})
         if(result)
             conn.commit()
-        conn.end()
+        dbObj.close()
         return result
     } catch(e) {
         conn.rollback()
-        conn.end()
-        throw new Error(e)
+        dbObj.close()
+        throw new Error(e as string)
     }
 }
 
-const update = async (genre) => {
-    const conn = await bdObj.connect(true)
+const update = async (genre: genre) => {
+    const conn = await dbObj.connect(true)
     try {
-        const result = await genreDao.update(genre, bdObj, conn)
+        const result = await genreDao.updateGenre({genre, dbObj, conn})
         if(result)
             conn.commit()
-        conn.end()
+        dbObj.close()
         return result
     } catch(e) {
         conn.rollback()
-        conn.end()
-        throw new Error(e)
+        dbObj.close()
+        throw new Error(e as string)
     }
 }
 
-const delGenre = async (id) => {
-    const conn = await bdObj.connect(true)
+const delGenre = async (id: number | string) => {
+    const conn = await dbObj.connect(true)
     try {
-        const result = await genreDao.delGenre(id, bdObj, conn)
+        const result = await genreDao.delGenre({id, dbObj, conn})
         if(result)
             conn.commit()
-        conn.end()
+        dbObj.close()
         return result
     } catch(e) {
         conn.rollback()
-        conn.end()
-        throw new Error(e)
+        dbObj.close()
+        throw new Error(e as string)
     }
 }
 
-module.exports = {
+export default {
     listGenres,
     read,
     create,

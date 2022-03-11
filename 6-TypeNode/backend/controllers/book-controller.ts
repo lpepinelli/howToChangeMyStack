@@ -1,18 +1,19 @@
-const bookService = require('../services/book-service')
-const imageService = require('../services/image-service')
+import bookService from '../services/book-service'
+import imageService from '../services/image-service'
+import {Request, Response, NextFunction} from 'express'
 
-const getBooks = async (req, res, next) => {
+const getBooks = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const result = await bookService.listBooks()
         res.status(200).send(result);
         next()
     } catch (error) {
-        res.status(500).json(error.message)
+        res.status(500).json(error)
         next(error)
     }
 }
 
-const getBook = async (req, res, next) => {
+const getBook = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const id = req.params.id
         const result = await bookService.read(id)
@@ -22,12 +23,12 @@ const getBook = async (req, res, next) => {
             res.status(404).send({});
         next()
     } catch (error) {
-        res.status(500).json(error.message)
+        res.status(500).json(error)
         next(error)
     }
 }
 
-const postBook = async (req, res, next) => {
+const postBook = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const book = {
             id: 0,
@@ -44,12 +45,12 @@ const postBook = async (req, res, next) => {
         res.status(201).send(result);
         next()
     } catch (error) {
-        res.status(500).json(error.message)
+        res.status(500).json(error)
         next(error)
     }
 }
 
-const putBook = async (req, res, next) => {
+const putBook = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const id = req.params.id
         const book = {
@@ -73,12 +74,12 @@ const putBook = async (req, res, next) => {
         }
         next()
     } catch (error) {
-        res.status(500).json(error.message)
+        res.status(500).json(error)
         next(error)
     }
 }
 
-const deleteBook = async (req, res, next) => {
+const deleteBook = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const id = req.params.id
         const book = await bookService.read(id)
@@ -102,7 +103,7 @@ const deleteBook = async (req, res, next) => {
     }
 }
 
-const postImage = async (req, res, next) => {
+const postImage = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const result = await imageService.saveImage(req.file)
         if(result)
@@ -110,12 +111,12 @@ const postImage = async (req, res, next) => {
         else
             res.sendStatus(500)
     } catch (error) {
-        res.status(500).json(error.message)
+        res.status(500).json(error)
         next(error)
     }
 }
 
-const putImage = async (req, res, next) => {
+const putImage = async (req: Request, res: Response, next: NextFunction) => {
     try {
         let result = await imageService.deleteImage(req.params.previousImage)
         result ? result = await imageService.saveImage(req.file) : result = false
@@ -124,12 +125,12 @@ const putImage = async (req, res, next) => {
         else
             res.sendStatus(500)
     } catch (error) {
-        res.status(500).json(error.message)
+        res.status(500).json(error)
         next(error)
     }
 }
 
-const getImage = async (req, res, next) => {
+const getImage = async (req: Request, res: Response, next: NextFunction) => {
     try {
         let result = await imageService.getImage(req.body.fileName)
         if(result){
@@ -138,12 +139,12 @@ const getImage = async (req, res, next) => {
         }
         next()
     } catch (error) {
-        res.status(500).json(error.message)
+        res.status(500).json(error)
         next(error)
     }
 }
 
-module.exports = {
+export default {
     getBooks,
     getBook,
     postBook,

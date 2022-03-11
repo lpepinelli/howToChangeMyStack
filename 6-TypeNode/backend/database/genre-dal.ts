@@ -1,25 +1,22 @@
 import MysqlPersistence from '../database/mysql-persistence'
 
-type genreDalDTO = {
+export type genreDalDTO = {
     id: number | string,
-    genre: {
-        id: number | string,
-        name: string
-    }
-    bdObj: MysqlPersistence,
+    genre: genre
+    dbObj: MysqlPersistence,
     conn: typeof globalThis.connection
 }
-//! bdOObj param is really necessary ?
-const listGenres = async ({ bdObj, conn }: genreDalDTO) => {
-    const res = await bdObj.select({
+//! dbOObj param is really necessary ? idk
+const listGenres = async ({ dbObj, conn }: Pick<genreDalDTO, "dbObj" | "conn">) => {
+    const res = await dbObj.select({
         query:'SELECT gr_id as \'id\', name FROM Genre',
         conn
     })
     return res
 }
 
-const readGenre = async ({ id, bdObj, conn }: genreDalDTO): Promise<genreDalDTO["genre"]> => {
-    const res = await bdObj.select({
+const readGenre = async ({ id, dbObj, conn }: Omit<genreDalDTO, "genre">): Promise<genreDalDTO["genre"]> => {
+    const res = await dbObj.select({
         query: 'SELECT gr_id as \'id\', name FROM Genre where gr_id = ?',
         conn,
         param: [id]
@@ -27,8 +24,8 @@ const readGenre = async ({ id, bdObj, conn }: genreDalDTO): Promise<genreDalDTO[
     return res[0]
 }
 
-const createGenre = async ({ genre, bdObj, conn }: genreDalDTO) => {
-    const res = await bdObj.execute({
+const createGenre = async ({ genre, dbObj, conn }: Omit<genreDalDTO, "id">) => {
+    const res = await dbObj.execute({
         query:'insert into genre (name) values (?)',
         conn,
         param: [genre.name]
@@ -37,8 +34,8 @@ const createGenre = async ({ genre, bdObj, conn }: genreDalDTO) => {
     return genre
 }
 
-const updateGenre = async ({ genre, bdObj, conn }: genreDalDTO) => {
-    const res = await bdObj.execute({
+const updateGenre = async ({ genre, dbObj, conn }: Omit<genreDalDTO, "id">) => {
+    const res = await dbObj.execute({
         query: 'update genre set name = ? where gr_id = ?',
         conn,
         param: [genre.name, genre.id]
@@ -46,8 +43,8 @@ const updateGenre = async ({ genre, bdObj, conn }: genreDalDTO) => {
     return res
 }
 
-const delGenre = async ({ id, bdObj, conn }: genreDalDTO) => {
-    const res = await bdObj.execute({
+const delGenre = async ({ id, dbObj, conn }: Omit<genreDalDTO, "genre">) => {
+    const res = await dbObj.execute({
         query: 'delete from genre where gr_id = ?',
         conn,
         param: [id]
@@ -55,7 +52,7 @@ const delGenre = async ({ id, bdObj, conn }: genreDalDTO) => {
     return res
 }
 
-module.exports = {
+export default {
     listGenres,
     readGenre,
     createGenre,

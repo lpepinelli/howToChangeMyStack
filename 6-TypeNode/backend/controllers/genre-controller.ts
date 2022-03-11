@@ -1,18 +1,19 @@
-const genreService = require('../services/genre-service')
+import genreService from '../services/genre-service'
+import {Request, Response, NextFunction} from 'express'
 
 
-const getGenres = async (req, res, next) => {
+const getGenres = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const result = await genreService.listGenres()
         res.status(200).send(result);
         next()
     } catch (error) {
-        res.status(500).json(error.message)
+        res.status(500).json(error)
         next(error)
     }
 }
 
-const getGenre = async (req, res, next) => {
+const getGenre = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const id = req.params.id
         const result = await genreService.read(id)
@@ -22,12 +23,12 @@ const getGenre = async (req, res, next) => {
             res.status(404).send({});
         next()
     } catch (error) {
-        res.status(500).json(error.message)
+        res.status(500).json(error)
         next(error)
     }
 }
 
-const postGenre = async (req, res, next) => {
+const postGenre = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const genre = {
             id: 0,
@@ -37,12 +38,12 @@ const postGenre = async (req, res, next) => {
         res.status(201).send(result);
         next()
     } catch (error) {
-        res.status(500).json(error.message)
+        res.status(500).json(error)
         next(error)
     }
 }
 
-const putGenre = async (req, res, next) => {
+const putGenre = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const id = req.params.id
         const genre = {
@@ -59,12 +60,12 @@ const putGenre = async (req, res, next) => {
         }
         next()
     } catch (error) {
-        res.status(500).json(error.message)
+        res.status(500).json(error)
         next(error)
     }
 }
 
-const deleteGenre = async (req, res, next) => {
+const deleteGenre = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const id = req.params.id
         if (!await genreService.read(id))
@@ -86,7 +87,7 @@ const deleteGenre = async (req, res, next) => {
     }
 }
 
-module.exports = {
+export default {
     getGenres,
     getGenre,
     postGenre,

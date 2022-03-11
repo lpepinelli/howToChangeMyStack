@@ -14,11 +14,14 @@ type persistenceDTO = {
 }
 class MysqlPersistence{
 
+  isClosing: boolean = true;
+
   async connect(withTransaction: boolean){
-    if(global.connection) // && !global.connection.connection._closing
+    if(global.connection && !this.isClosing)
         return global.connection
 
     const connection = await createConnection(config)
+    this.isClosing = false
     if(withTransaction){
       await connection.execute('SET TRANSACTION ISOLATION LEVEL READ COMMITTED')
       await connection.beginTransaction()
@@ -37,6 +40,11 @@ class MysqlPersistence{
     const insertId = result[0].insertId
     const affectedRows = result[0].affectedRows
     return insertId > 0 ? insertId : affectedRows > 0 ? true : false
+  }
+
+  async close(){
+    global.connection.end()
+    this.isClosing = true
   }
 }
 

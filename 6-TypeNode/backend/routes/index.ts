@@ -1,8 +1,9 @@
-const express = require('express')
+import express from 'express'
+import genre from '../controllers/genre-controller'
+import book from '../controllers/book-controller'
+import multer from 'multer'
+
 const router = express.Router()
-const genre = require('../controllers/genre-controller')
-const book = require('../controllers/book-controller')
-const multer  = require('multer')
 const upload = multer({ dest: 'public/images' })
 
 router.get('/', function(req, res, next) {
@@ -26,4 +27,4 @@ router.post('/book/getImage', book.getImage)
 router.put('/book/image/:previousImage', upload.single('files'), book.putImage)
 
 
-module.exports = router
+export default router

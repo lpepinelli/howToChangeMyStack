@@ -3,11 +3,10 @@
 /**
  * Module dependencies.
  */
-
-let app = require('../app')
-const fs = require('fs')
-const http = require('http')
-const https = require('https')
+import app from '../app'
+import fs from 'fs'
+import http from 'http'
+import https from 'https'
 
 const credentials = {
   key: fs.readFileSync('ssl/localhost.key'),
@@ -41,7 +40,7 @@ app.set('port', port)
  * Normalize a port into a number, string, or false.
  */
 
-function normalizePort(val) {
+function normalizePort(val: string) {
   let port = parseInt(val, 10)
 
   if (isNaN(port)) {
@@ -61,7 +60,7 @@ function normalizePort(val) {
  * Event listener for https server "error" event.
  */
 
-function onError(error) {
+function onError(error: NodeJS.ErrnoException) {
   if (error.syscall !== 'listen') {
     throw error
   }
@@ -93,7 +92,7 @@ function onListening() {
   let addr = httpsServer.address()
   let bind = typeof addr === 'string'
     ? 'pipe ' + addr
-    : 'port ' + addr.port
+    : 'port ' + addr!.port
   console.log(`Listening on ${bind} ☕`)
   console.log(`Serving running at https://localhost:5002/api`)
   console.log(`                Or  http://localhost:5003/api`)
