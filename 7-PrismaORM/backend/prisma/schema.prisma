@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model book {
+  bk_id       Int      @id @default(autoincrement())
+  title       String   @db.VarChar(60)
+  author      String   @db.VarChar(60)
+  cover       String?  @db.VarChar(120)
+  gr_id       Int
+  isbn        String?  @db.VarChar(30)
+  publication DateTime @db.Date
+  genre       genre    @relation(fields: [gr_id], references: [gr_id], onDelete: NoAction, onUpdate: NoAction, map: "genre_book_fk")
+
+  @@index([gr_id], map: "genre_book_fk")
+}
+
+model genre {
+  gr_id Int    @id @default(autoincrement())
+  name  String @db.VarChar(60)
+  books  book[]
+}
