@@ -1,29 +1,36 @@
 import genreDao from '../database/genre-dal'
+import { PrismaClient } from '@prisma/client'
 import MysqlPersistence from '../database/mysql-persistence'
 
 const dbObj = new MysqlPersistence()
 
+const prisma = new PrismaClient()
+
 const listGenres = async () => {
-    const conn = await dbObj.connect(false)
     try {
-        const result = await genreDao.listGenres({dbObj, conn})
-        dbObj.close()
-        return result
+        prisma.$connect()
+        return await prisma.genre.findMany()
     } catch(e) {
-        dbObj.close()
         throw new Error(e as string)
+    }
+    finally{
+        await prisma.$disconnect()
     }
 }
 
-const read = async (id: number | string) => {
-    const conn = await dbObj.connect(false)
+const read = async (id: number) => {
     try {
-        const result = await genreDao.readGenre({id, dbObj, conn})
-        dbObj.close()
-        return result
+        prisma.$connect()
+        return await prisma.genre.findUnique({
+            where: {
+                id: id
+            },
+          })
     } catch(e) {
-        dbObj.close()
         throw new Error(e as string)
+    }
+    finally{
+        await prisma.$disconnect()
     }
 }
 

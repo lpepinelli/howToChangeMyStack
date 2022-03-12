@@ -8,20 +8,20 @@ datasource db {
 }
 
 model book {
-  bk_id       Int      @id @default(autoincrement())
+  id       Int      @id @default(autoincrement()) @map("bk_id")
   title       String   @db.VarChar(60)
   author      String   @db.VarChar(60)
   cover       String?  @db.VarChar(120)
-  gr_id       Int
   isbn        String?  @db.VarChar(30)
   publication DateTime @db.Date
-  genre       genre    @relation(fields: [gr_id], references: [gr_id], onDelete: NoAction, onUpdate: NoAction, map: "genre_book_fk")
+  genre       genre    @relation(fields: [gr_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "genre_book_fk")
+  gr_id       Int
 
-  @@index([gr_id], map: "genre_book_fk")
+  @@index([id], map: "genre_book_fk")
 }
 
 model genre {
-  gr_id Int    @id @default(autoincrement())
+  id Int    @id @default(autoincrement()) @map("gr_id")
   name  String @db.VarChar(60)
   books  book[]
 }

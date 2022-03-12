@@ -1,17 +1,24 @@
 import bookDao from '../database/book-dal'
 import MysqlPersistence from '../database/mysql-persistence'
+import { PrismaClient } from '@prisma/client'
 
 const dbObj = new MysqlPersistence()
 
+const prisma = new PrismaClient()
+
 const listBooks = async () => {
-    const conn = await dbObj.connect(false)
     try {
-        const result = await bookDao.listBooks({dbObj, conn})
-        dbObj.close()
-        return result
+        prisma.$connect()
+        return await prisma.book.findMany({
+            include: {
+                genre: true,
+            },
+          })
     } catch(e) {
-        dbObj.close()
         throw new Error(e as string)
+    }
+    finally{
+        await prisma.$disconnect()
     }
 }
 

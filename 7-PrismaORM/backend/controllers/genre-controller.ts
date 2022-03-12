@@ -15,7 +15,7 @@ const getGenres = async (req: Request, res: Response, next: NextFunction) => {
 
 const getGenre = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const id = req.params.id
+        const id = parseInt(req.params.id)
         const result = await genreService.read(id)
         if(result)
             res.status(200).send(result);
@@ -45,9 +45,9 @@ const postGenre = async (req: Request, res: Response, next: NextFunction) => {
 
 const putGenre = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const id = req.params.id
-        const genre = {
-            id: req.body.id,
+        const id = parseInt(req.params.id)
+        const genre: genre = {
+            id: parseInt(req.body.id),
             name : req.body.name
         }
         if (id != genre.id)
@@ -67,7 +67,7 @@ const putGenre = async (req: Request, res: Response, next: NextFunction) => {
 
 const deleteGenre = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const id = req.params.id
+        const id = parseInt(req.params.id)
         if (!await genreService.read(id))
             res.status(404).send({message: "register not found"})
         else{
