@@ -15,7 +15,7 @@ const getBooks = async (req: Request, res: Response, next: NextFunction) => {
 
 const getBook = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const id = req.params.id
+        const id = parseInt(req.params.id)
         const result = await bookService.read(id)
         if(result)
             res.status(200).send(result);
@@ -36,7 +36,7 @@ const postBook = async (req: Request, res: Response, next: NextFunction) => {
             author: req.body.author,
             cover : req.body.cover,
             genre : {
-                id: req.body.genre.id
+                id: parseInt(req.body.genre.id)
             },
             isbn  : req.body.isbn,
             publication: new Date(req.body.publication)
@@ -52,7 +52,7 @@ const postBook = async (req: Request, res: Response, next: NextFunction) => {
 
 const putBook = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const id = req.params.id
+        const id = parseInt(req.params.id)
         const book = {
             id: req.body.id,
             title : req.body.title,
@@ -81,7 +81,7 @@ const putBook = async (req: Request, res: Response, next: NextFunction) => {
 
 const deleteBook = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const id = req.params.id
+        const id = parseInt(req.params.id)
         const book = await bookService.read(id)
         if (!book)
             res.status(404).send({message: "register not found"})

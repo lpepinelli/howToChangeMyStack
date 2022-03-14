@@ -1,8 +1,4 @@
-import bookDao from '../database/book-dal'
-import MysqlPersistence from '../database/mysql-persistence'
 import { PrismaClient } from '@prisma/client'
-
-const dbObj = new MysqlPersistence()
 
 const prisma = new PrismaClient()
 
@@ -22,60 +18,91 @@ const listBooks = async () => {
     }
 }
 
-const read = async (id: number | string) => {
-    const conn = await dbObj.connect(false)
+const read = async (id: number) => {
     try {
-        const result = await bookDao.readBook({id, dbObj, conn})
-        dbObj.close()
-        return result
+        prisma.$connect()
+        return await prisma.book.findUnique({
+            where: {
+                id
+            },
+            include: {
+                genre: true,
+            },
+          })
     } catch(e) {
-        dbObj.close()
         throw new Error(e as string)
+    }
+    finally{
+        await prisma.$disconnect()
     }
 }
 
 const create = async (book: book) => {
-    const conn = await dbObj.connect(true)
     try {
-        const result = await bookDao.createBook({book, dbObj, conn})
-        if(result)
-            conn.commit()
-        dbObj.close()
-        return result
+        prisma.$connect()
+        const created =  await prisma.book.create({ data: {
+            title: book.title,
+            author: book.author,
+            cover: book.cover,
+            genre: {
+                connect: book.genre
+            },
+            isbn: book.isbn,
+            publication: book.publication
+        } })
+        book.id = created.id
+        return book
     } catch(e) {
-        conn.rollback()
-        dbObj.close()
         throw new Error(e as string)
+    }
+    finally{
+        await prisma.$disconnect()
     }
 }
 
 const update = async (book: book) => {
-    const conn = await dbObj.connect(true)
     try {
-        const result = await bookDao.updateBook({book, dbObj, conn})
-        if(result)
-            conn.commit()
-        dbObj.close()
-        return result
+        prisma.$connect()
+        return await prisma.book.update({
+            where: {
+                id: book.id
+            },
+            data: {
+                title: book.title,
+                author: book.author,
+                cover: book.cover,
+                genre: {
+                    connect: book.genre
+                },
+                isbn: book.isbn,
+                publication: book.publication
+            }
+        })
     } catch(e) {
-        conn.rollback()
-        dbObj.close()
         throw new Error(e as string)
+    }
+    finally{
+        await prisma.$disconnect()
     }
 }
 
-const delBook = async (id: number | string) => {
-    const conn = await dbObj.connect(true)
+const delBook = async (id: number) => {
     try {
-        const result = await bookDao.delBook({id, dbObj, conn})
+        prisma.$connect()
+        const result =  await prisma.book.delete({
+            where:{
+                id
+            }
+        })
         if(result)
-            conn.commit()
-        dbObj.close()
-        return result
+            return true
+        else
+            return false
     } catch(e) {
-        conn.rollback()
-        dbObj.close()
         throw new Error(e as string)
+    }
+    finally{
+        await prisma.$disconnect()
     }
 }
 

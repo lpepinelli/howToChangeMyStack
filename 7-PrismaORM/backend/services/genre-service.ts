@@ -1,8 +1,4 @@
-import genreDao from '../database/genre-dal'
 import { PrismaClient } from '@prisma/client'
-import MysqlPersistence from '../database/mysql-persistence'
-
-const dbObj = new MysqlPersistence()
 
 const prisma = new PrismaClient()
 
@@ -23,7 +19,7 @@ const read = async (id: number) => {
         prisma.$connect()
         return await prisma.genre.findUnique({
             where: {
-                id: id
+                id
             },
           })
     } catch(e) {
@@ -35,47 +31,53 @@ const read = async (id: number) => {
 }
 
 const create = async (genre: genre) => {
-    const conn = await dbObj.connect(true)
     try {
-        const result = await genreDao.createGenre({genre, dbObj, conn})
-        if(result)
-            conn.commit()
-        dbObj.close()
-        return result
+        prisma.$connect()
+        return await prisma.genre.create({ data: genre })
     } catch(e) {
-        conn.rollback()
-        dbObj.close()
         throw new Error(e as string)
+    }
+    finally{
+        await prisma.$disconnect()
     }
 }
 
 const update = async (genre: genre) => {
-    const conn = await dbObj.connect(true)
     try {
-        const result = await genreDao.updateGenre({genre, dbObj, conn})
-        if(result)
-            conn.commit()
-        dbObj.close()
-        return result
+        prisma.$connect()
+        return await prisma.genre.update({
+            where: {
+                id: genre.id
+            },
+            data: {
+                name: genre.name
+            }
+        })
     } catch(e) {
-        conn.rollback()
-        dbObj.close()
         throw new Error(e as string)
+    }
+    finally{
+        await prisma.$disconnect()
     }
 }
 
-const delGenre = async (id: number | string) => {
-    const conn = await dbObj.connect(true)
+const delGenre = async (id: number) => {
     try {
-        const result = await genreDao.delGenre({id, dbObj, conn})
+        prisma.$connect()
+        const result =  await prisma.genre.delete({
+            where:{
+                id
+            }
+        })
         if(result)
-            conn.commit()
-        dbObj.close()
-        return result
+            return true
+        else
+            return false
     } catch(e) {
-        conn.rollback()
-        dbObj.close()
         throw new Error(e as string)
+    }
+    finally{
+        await prisma.$disconnect()
     }
 }
 

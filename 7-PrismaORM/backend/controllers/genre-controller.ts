@@ -31,7 +31,6 @@ const getGenre = async (req: Request, res: Response, next: NextFunction) => {
 const postGenre = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const genre = {
-            id: 0,
             name : req.body.name
         }
         const result = await genreService.create(genre)
