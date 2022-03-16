@@ -5,8 +5,6 @@
 
 Read this in english: <a href="readme_US.md"><img height="16" src="https://raw.githubusercontent.com/lipis/flag-icons/95cbeb22405dad5b86ee76df892c3666e81882d8/flags/4x3/us.svg" alt="US"/></a>
 
->### 🚧 Projeto em Desenvolvimento
-
 ## 🎯 **Objetivo**
 
 Eu estou insatisfeito com a minha stack atual, e por estar confortável com javascript puro, eu gostaria de entrar no mundo dos frameworks e usar a "FullStack Javascript". Porém, mudar completamente uma stack de tecnologia envolve remover e adicionar muitas tecnologias diferentes, e fazer isso de uma só vez pode não ser a melhor abordagem. A ideia deste projeto é criar um CRUD simples, com apenas uma entidade principal e uma entidade complementar, utilizando toda a minha stack atual e reescreve-lo adicionando uma tecnologia nova a cada projeto.
