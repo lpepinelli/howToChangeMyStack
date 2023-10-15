@@ -1,5 +1,6 @@
 import React from "react";
 
+const BASE_URL = "http://localhost:3000"
 const useFetch = () => {
   const [data, setData] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
@@ -77,7 +78,7 @@ const useFetch = () => {
         }
       }
       let response, json, message, error;
-      response = await fetch(url, options);
+      response = await fetch(BASE_URL+url, options);
       try {
         setError("");
         error = null;
@@ -87,7 +88,7 @@ const useFetch = () => {
         json = await response.json();
         if (!response.ok) {
           error = {
-            message: "StatusCode: " + message + " | Error: " + json.title,
+            message: `StatusCode: ${message} | Error: ${json.title}`,
             errors: json.errors,
           };
         }
@@ -95,8 +96,8 @@ const useFetch = () => {
         json = null;
         setMessage(messages[response.status]);
         message = messages[response.status];
-        setError("StatusCode: " + message + "\n" + erro);
-        error = "StatusCode: " + message + "\n" + erro;
+        setError(`StatusCode: ${message}\n ${erro}`);
+        error = `StatusCode: ${message}\n ${erro}`;
       } finally {
         setData(json);
         setLoading(false);

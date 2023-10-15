@@ -16,7 +16,7 @@ const Books = () => {
       if (response.ok) setBooks(json);
       else console.error(error);
     }
-    fetchBooks("https://localhost:5002/api/Book");
+    fetchBooks("/books");
   }, []);
 
   type bookTypes = {

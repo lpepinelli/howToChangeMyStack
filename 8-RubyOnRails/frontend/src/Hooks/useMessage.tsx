@@ -40,7 +40,7 @@ const useMessage = (redirect: string) => {
       });
     else
       Modal.error({
-        content: "Erro!:" + error,
+        content: `Erro!: ${error}`,
         onOk() {
           navigate(redirect);
         },

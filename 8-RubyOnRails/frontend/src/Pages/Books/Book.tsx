@@ -62,7 +62,7 @@ const Book = () => {
       if (response.ok) setGenres(json);
       else console.error(error);
     }
-    fetchGenres("https://localhost:5002/api/Genre");
+    fetchGenres("/genres");
   }, []);
 
   React.useEffect(() => {
@@ -77,7 +77,7 @@ const Book = () => {
         form.setFieldsValue({ isbn: json.isbn });
         setIsbnRaw(json.isbn);
         form.setFieldsValue({ publication: moment(json.publication) });
-        let imgUrl: string = await getCover(json.id + "-" + json.cover);
+        let imgUrl: string = await getCover(`${json.id}-${json.cover}`);
         form.setFieldsValue({
           cover: [
             {
@@ -90,7 +90,7 @@ const Book = () => {
         });
       } else console.error(error);
     }
-    fetchBook("https://localhost:5002/api/Book/" + id);
+    fetchBook(`/books/${id}`);
   }, []);
 
   async function getAsyncFile(blob: Blob) {
@@ -104,7 +104,7 @@ const Book = () => {
   }
 
   async function getCover(fileName: string) {
-    const response = await fetch("https://localhost:5002/api/Book/GetImage", {
+    const response = await fetch("/books/getimage", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -128,7 +128,7 @@ const Book = () => {
       form.setFieldsValue({ genre: book.genre.id });
       form.setFieldsValue({ isbn: book.isbn });
       form.setFieldsValue({ publication: moment(book.publication) });
-      let imgUrl: string = await getCover(book.id + "-" + book.cover);
+      let imgUrl: string = await getCover(`${book.id}-${book.cover}`);
       form.setFieldsValue({
         cover: [
           {
@@ -147,7 +147,7 @@ const Book = () => {
     let formData = new FormData();
     let auxName = "";
 
-    auxName = bk_id + "-" + file.name;
+    auxName = `${bk_id}-${file.name}`;
     formData.append("files", file, auxName);
 
     const options = {
@@ -158,7 +158,7 @@ const Book = () => {
     };
 
     const { response, error } = await request(
-      "https://localhost:5002/api/Book/Image/" + bk_id + "-" + previousImage,
+      `/books/image/${bk_id}-${previousImage}`,
       "CREATE",
       null,
       options,
@@ -171,16 +171,14 @@ const Book = () => {
     let previousImage = book ? book.cover : "";
     values.isbn = isbnRaw;
     values.publication = values.publication.toDate();
-    values.genre = {
-      id: values.genre,
-    };
+    values.genre_id = values.genre
     if (values.cover) {
       file = values.cover[0].originFileObj;
       values.cover = values.cover[0].name;
     }
     confirmMessage("edit", async function () {
       const { response, error, json } = await request(
-        "https://localhost:5002/api/Book/" + id,
+        `/books/${id}`,
         "UPDATE",
         values,
       );
@@ -195,14 +193,12 @@ const Book = () => {
   async function handleDelete() {
     confirmMessage("delete", async function () {
       const { json, response, error } = await request(
-        "https://localhost:5002/api/Book/" + id,
+        `/books/${id}`,
         "DELETE",
       );
       if (response.ok) {
         setEdit(false);
-        json.result
-          ? resultMessage("delete")
-          : resultMessage("delete", json.msg);
+        resultMessage("delete")
       } else resultMessage("delete", error ? error : null);
     });
   }

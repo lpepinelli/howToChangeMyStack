@@ -16,7 +16,7 @@ function Genres() {
       if (response.ok) setGenres(json);
       else console.error(error);
     }
-    fetchGenres("https://localhost:5002/api/Genre");
+    fetchGenres("/genres");
   }, []);
 
   return (

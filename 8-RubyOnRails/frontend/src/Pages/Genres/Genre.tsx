@@ -47,7 +47,7 @@ const Genre = () => {
         form.setFieldsValue({ name: json.name });
       } else console.error(error);
     }
-    fetchGenre("https://localhost:5002/api/Genre/" + id);
+    fetchGenre(`/genres/${id}`);
   }, []);
 
   function initState() {
@@ -63,7 +63,7 @@ const Genre = () => {
   const onFinish = (values: any) => {
     confirmMessage("edit", async function () {
       const { response, error } = await request(
-        "https://localhost:5002/api/Genre/" + id,
+        `/genres/${id}`,
         "UPDATE",
         values,
       );
@@ -74,14 +74,12 @@ const Genre = () => {
   async function handleDelete() {
     confirmMessage("delete", async function () {
       const { json, response, error } = await request(
-        "https://localhost:5002/api/Genre/" + id,
+        `/genres/${id}`,
         "DELETE",
       );
       if (response.ok) {
         setEdit(false);
-        json.result
-          ? resultMessage("delete")
-          : resultMessage("delete", json.msg);
+        resultMessage("delete")
       } else resultMessage("delete", error ? error : null);
     });
   }

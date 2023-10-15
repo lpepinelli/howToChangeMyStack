@@ -27,7 +27,7 @@ function GenreCreate() {
   const onFinish = (values: any) => {
     confirmMessage("save", async function () {
       const { response, error } = await request(
-        "https://localhost:5002/api/Genre",
+        "/genres",
         "CREATE",
         values,
       );

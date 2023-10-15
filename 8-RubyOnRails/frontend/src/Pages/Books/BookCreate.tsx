@@ -38,7 +38,7 @@ const BookCreate = () => {
     id: string;
     name: string;
   }>;
-  const [genres, setGenres] = React.useState([]);
+  const [genres, setGenres] = React.useState<genreTypes>([]);
   const { resultMessage, confirmMessage } = useMessage("/");
   const [isbnRaw, setIsbnRaw] = React.useState("");
 
@@ -48,15 +48,15 @@ const BookCreate = () => {
       if (response.ok) setGenres(json);
       else console.error(error);
     }
-    fetchGenres("https://localhost:5002/api/Genre");
+    fetchGenres("/genres");
   }, []);
 
   async function saveImage(bk_id: number, file: File) {
     let formData = new FormData();
     let auxName = "";
 
-    auxName = bk_id + "-" + file.name;
-    formData.append("files", file, auxName);
+    auxName = `${bk_id}-${file.name}`;
+    formData.append("image[cover]", file, auxName);
 
     const options = {
       method: "POST",
@@ -66,7 +66,7 @@ const BookCreate = () => {
     };
 
     const { response, error } = await request(
-      "https://localhost:5002/api/Book/Image",
+      "/images",
       "CREATE",
       null,
       options,
@@ -79,16 +79,14 @@ const BookCreate = () => {
     let file: File;
     values.isbn = isbnRaw;
     values.publication = values.publication.toDate();
-    values.genre = {
-      id: values.genre,
-    };
+    values.genre_id = values.genre
     if (values.cover) {
       file = values.cover[0].originFileObj;
       values.cover = values.cover[0].name;
     }
     confirmMessage("save", async function () {
       const { response, error, json } = await request(
-        "https://localhost:5002/api/Book",
+        "/books",
         "CREATE",
         values,
       );
