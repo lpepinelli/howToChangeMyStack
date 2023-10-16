@@ -10,14 +10,12 @@ class BooksController < ApplicationController
 
   # GET /books/1
   def show
-    render json: @book
+    render json: @book, include: :genre
   end
 
   # POST /books
   def create
     @book = Book.new(book_params)
-    puts "We have genre #{book_params}"
-    puts "teste"
 
     if @book.save
       render json: @book, status: :created, location: @book
@@ -37,7 +35,13 @@ class BooksController < ApplicationController
 
   # DELETE /books/1
   def destroy
-    @book.destroy!
+    attachment = Image.joins(cover_attachment: :blob)
+                .where(ActiveStorage::Blob.arel_table[:filename].eq(params[:filename]))
+                .first
+    if attachment
+      attachment.destroy!
+    end
+    @book.destroy! 
   end
 
   private

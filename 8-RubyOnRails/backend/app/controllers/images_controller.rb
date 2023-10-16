@@ -10,23 +10,38 @@ class ImagesController < ApplicationController
 
   # GET /images/1
   def show
-    render json: @image
+    render json: @images
   end
 
   def getImage
-    puts params[:filename]
-    attachment = Image.joins(cover_attachment: :blob)
-             .where(ActiveStorage::Blob.arel_table[:filename].eq(params[:filename]))
-             .first
+    attachment = ActiveStorage::Blob.find_by(filename: params[:filename])
 
     if attachment
-      image = attachment.record
-      return image
+      # render json: { image_url: Rails.application.routes.url_helpers.rails_blob_path(attachment, only_path: true) }
+      
+      binary_data = attachment.download
+      content_type = attachment.content_type
+      send_data(binary_data, type: content_type, disposition: 'inline')
     else
-      render json: attachment.errors
+      render json: { error: 'Image not found' }, status: :not_found
     end
 
   end
+
+  def updateImageByName
+    attachment = Image.joins(cover_attachment: :blob)
+                    .where(ActiveStorage::Blob.arel_table[:filename].eq(params[:previousFile]))
+                    .first
+    if attachment
+      @image = attachment
+      if @image.update(image_params)
+        render json: @image
+      else
+        render json: @image.errors, status: :unprocessable_entity
+      end
+    end
+  end
+
 
   # POST /images
   def create
