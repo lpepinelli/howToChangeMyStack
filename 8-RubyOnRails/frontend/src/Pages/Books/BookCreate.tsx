@@ -17,6 +17,7 @@ import {
   Select,
   DatePicker,
   Upload,
+  Modal,
 } from "antd";
 import React from "react";
 import { MaskedInput } from "antd-mask-input";
@@ -24,6 +25,7 @@ import { Link } from "react-router-dom";
 import Head from "../../Components/Head";
 import useFetch from "../../Hooks/useFetch";
 import useMessage from "../../Hooks/useMessage";
+import { UploadFile } from "antd/lib/upload/interface";
 
 const { Title } = Typography;
 
@@ -41,6 +43,9 @@ const BookCreate = () => {
   const [genres, setGenres] = React.useState<genreTypes>([]);
   const { resultMessage, confirmMessage } = useMessage("/");
   const [isbnRaw, setIsbnRaw] = React.useState("");
+  const [previewOpen, setPreviewOpen] = React.useState(false);
+  const [previewImage, setPreviewImage] = React.useState('');
+  const [previewTitle, setPreviewTitle] = React.useState('');
 
   React.useEffect(() => {
     async function fetchGenres(url: string) {
@@ -50,6 +55,18 @@ const BookCreate = () => {
     }
     fetchGenres("/genres");
   }, []);
+
+  function handleCancel() {
+    setPreviewOpen(false);
+  }
+
+  async function handlePreview (file: UploadFile) {
+    console.log(file)
+
+    setPreviewImage(file.thumbUrl || "");
+    setPreviewOpen(true);
+    setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1));
+  }
 
   async function saveImage(bk_id: number, file: File) {
     let formData = new FormData();
@@ -196,6 +213,7 @@ const BookCreate = () => {
                       onSuccess ? onSuccess("ok") : null;
                     }, 0);
                   }}
+                  onPreview={handlePreview}
                   listType="picture-card"
                   maxCount={1}
                 >
@@ -222,6 +240,9 @@ const BookCreate = () => {
           </Form.Item>
         </Form>
       </Card>
+      <Modal visible={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+        <img alt="example" style={{ width: '100%' }} src={previewImage} />
+      </Modal>
     </>
   );
 };

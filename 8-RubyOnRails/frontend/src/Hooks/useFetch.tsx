@@ -1,6 +1,6 @@
 import React from "react";
 
-const BASE_URL = "http://localhost:3000"
+export const BASE_URL = "https://curly-telegram-4w74rr4gv542jxw7-3000.app.github.dev"
 const useFetch = () => {
   const [data, setData] = React.useState(null);
   const [loading, setLoading] = React.useState(false);

@@ -19,14 +19,16 @@ import {
   Select,
   DatePicker,
   Upload,
+  Modal,
 } from "antd";
 import React from "react";
 import { MaskedInput } from "antd-mask-input";
 import Head from "../../Components/Head";
-import useFetch from "../../Hooks/useFetch";
+import useFetch, { BASE_URL } from "../../Hooks/useFetch";
 import useMessage from "../../Hooks/useMessage";
 import { useParams, Link } from "react-router-dom";
 import moment from "moment";
+import type { UploadFile } from 'antd/es/upload/interface';
 
 const { Title } = Typography;
 
@@ -55,6 +57,9 @@ const Book = () => {
   const { request, loading } = useFetch();
   const { id } = useParams();
   const { resultMessage, confirmMessage } = useMessage("/");
+  const [previewOpen, setPreviewOpen] = React.useState(false);
+  const [previewImage, setPreviewImage] = React.useState('');
+  const [previewTitle, setPreviewTitle] = React.useState('');
 
   React.useEffect(() => {
     async function fetchGenres(url: string) {
@@ -77,21 +82,35 @@ const Book = () => {
         form.setFieldsValue({ isbn: json.isbn });
         setIsbnRaw(json.isbn);
         form.setFieldsValue({ publication: moment(json.publication) });
-        let imgUrl: string = await getCover(`${json.id}-${json.cover}`);
-        form.setFieldsValue({
-          cover: [
-            {
-              uid: "-1",
-              name: json.cover,
-              status: "done",
-              thumbUrl: imgUrl,
-            },
-          ],
-        });
+        if(json.cover) {
+          let imgUrl: string = await getCover(`${json.id}-${json.cover}`);
+          form.setFieldsValue({
+            cover: [
+              {
+                uid: "-1",
+                name: json.cover,
+                status: "done",
+                thumbUrl: imgUrl,
+              },
+            ],
+          });
+        }
       } else console.error(error);
     }
     fetchBook(`/books/${id}`);
   }, []);
+
+  function handleCancel() {
+    setPreviewOpen(false);
+  }
+
+  async function handlePreview (file: UploadFile) {
+    console.log(file)
+
+    setPreviewImage(file.thumbUrl || "");
+    setPreviewOpen(true);
+    setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1));
+  }
 
   async function getAsyncFile(blob: Blob) {
     return new Promise((resolve, reject) => {
@@ -104,13 +123,12 @@ const Book = () => {
   }
 
   async function getCover(fileName: string) {
-    const response = await fetch("/books/getimage", {
-      method: "POST",
+    const response = await fetch(`${BASE_URL}/images/getby?filename=${fileName}`, {
+      method: "GET",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json; charset=utf-8",
-      },
-      body: JSON.stringify({ fileName }),
+      }
     });
 
     if (response.ok) {
@@ -148,17 +166,17 @@ const Book = () => {
     let auxName = "";
 
     auxName = `${bk_id}-${file.name}`;
-    formData.append("files", file, auxName);
+    formData.append("image[cover]", file, auxName);
 
     const options = {
-      method: "PUT",
+      method: previousImage ? "PUT" : "POST",
       body: formData,
       processData: false,
       contentType: false,
     };
 
     const { response, error } = await request(
-      `/books/image/${bk_id}-${previousImage}`,
+      previousImage ? `/images/updateby?previousFile=${bk_id}-${previousImage}` : '/images',
       "CREATE",
       null,
       options,
@@ -190,10 +208,11 @@ const Book = () => {
     });
   };
 
+
   async function handleDelete() {
     confirmMessage("delete", async function () {
       const { json, response, error } = await request(
-        `/books/${id}`,
+        `/books/${id}?filename=${id}-${form.getFieldValue("cover")[0].name}`,
         "DELETE",
       );
       if (response.ok) {
@@ -310,6 +329,7 @@ const Book = () => {
                     }, 0);
                   }}
                   listType="picture-card"
+                  onPreview={handlePreview}
                   maxCount={1}
                   disabled={!edit}
                 >
@@ -373,6 +393,9 @@ const Book = () => {
           </Row>
         </Form>
       </Card>
+      <Modal visible={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+        <img alt="example" style={{ width: '100%' }} src={previewImage} />
+      </Modal>
     </>
   );
 };
