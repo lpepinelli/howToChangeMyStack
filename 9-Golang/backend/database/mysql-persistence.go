@@ -18,7 +18,7 @@ func getMysqlConnectionString() string {
 	config.Passwd = os.Getenv("DBPASS")
 	config.Net = "tcp"
 	config.Addr = "127.0.0.1:3306"
-	config.DBName = "recordings"
+	config.DBName = "bookstore"
 
 	return config.FormatDSN()
 }
@@ -44,25 +44,25 @@ func ConnectToDB() *Connector {
 	return &Connector{db}
 }
 
-func (conn *Connector) Select(query string, args ...interface{}) ([]map[string]interface{}, error) {
-	rows, err := conn.db.Query(query, args...)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var results []map[string]interface{}
-	for rows.Next() {
-		result := make(map[string]interface{})
-		err = rows.Scan(result)
-		if err != nil {
-			return nil, err
-		}
-		results = append(results, result)
-	}
-
-	return results, nil
-}
+// func (conn *Connector) Select(query string, args ...interface{}) ([]map[string]interface{}, error) {
+// 	rows, err := conn.db.Query(query, args...)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	defer rows.Close()
+//
+// 	var results []map[string]interface{}
+// 	for rows.Next() {
+// 		result := make(map[string]interface{})
+// 		err = rows.Scan(result)
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 		results = append(results, result)
+// 	}
+//
+// 	return results, nil
+// }
 
 func (conn *Connector) Execute(query string, args ...interface{}) (sql.Result, error) {
 	result, err := conn.db.Exec(query, args...)

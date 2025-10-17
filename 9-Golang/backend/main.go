@@ -7,7 +7,7 @@ import (
 func main() {
 	db := database.ConnectToDB()
 	defer db.Close()
-	router := getRoutes()
+	router := getRoutes(db)
 
 	router.Run("localhost:5002")
 }
