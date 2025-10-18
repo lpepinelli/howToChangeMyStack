@@ -7,8 +7,8 @@ import (
 	"strconv"
 )
 
-func GetBooks(c *gin.Context, conn *database.Connector) {
-	books, err := database.GetBooks(conn)
+func GetGenres(c *gin.Context, conn *database.Connector) {
+	genres, err := database.GetGenres(conn)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{
 			"message": err.Error(),
@@ -17,11 +17,11 @@ func GetBooks(c *gin.Context, conn *database.Connector) {
 	}
 
 	c.IndentedJSON(http.StatusOK, gin.H{
-		"books": books,
+		"genres": genres,
 	})
 }
 
-func GetBook(c *gin.Context, conn *database.Connector) {
+func GetGenre(c *gin.Context, conn *database.Connector) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{
@@ -30,7 +30,7 @@ func GetBook(c *gin.Context, conn *database.Connector) {
 		return
 	}
 
-	book, err := database.GetBookById(conn, id)
+	genre, err := database.GetGenreById(conn, id)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{
 			"message": err.Error(),
@@ -39,15 +39,15 @@ func GetBook(c *gin.Context, conn *database.Connector) {
 	}
 
 	c.IndentedJSON(http.StatusOK, gin.H{
-		"book": book,
+		"genre": genre,
 	})
 }
 
-func CreateBook(c *gin.Context, conn *database.Connector) {
-	book := database.Book{}
-	c.BindJSON(&book)
+func CreateGenre(c *gin.Context, conn *database.Connector) {
+	genre := database.Genre{}
+	c.BindJSON(&genre)
 
-	err := database.CreateBook(conn, &book)
+	err := database.CreateGenre(conn, &genre)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{
 			"message": err.Error(),
@@ -56,11 +56,11 @@ func CreateBook(c *gin.Context, conn *database.Connector) {
 	}
 
 	c.IndentedJSON(http.StatusCreated, gin.H{
-		"book": book,
+		"genre": genre,
 	})
 }
 
-func UpdateBook(c *gin.Context, conn *database.Connector) {
+func UpdateGenre(c *gin.Context, conn *database.Connector) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{
@@ -69,12 +69,12 @@ func UpdateBook(c *gin.Context, conn *database.Connector) {
 		return
 	}
 
-	book := database.Book{}
-	c.BindJSON(&book)
+	genre := database.Genre{}
+	c.BindJSON(&genre)
 
-	book.Id = id
+	genre.Id = id
 
-	err = database.UpdateBook(conn, &book)
+	err = database.UpdateGenre(conn, &genre)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{
 			"message": err.Error(),
@@ -83,11 +83,11 @@ func UpdateBook(c *gin.Context, conn *database.Connector) {
 	}
 
 	c.IndentedJSON(http.StatusOK, gin.H{
-		"book": book,
+		"genre": genre,
 	})
 }
 
-func DeleteBook(c *gin.Context, conn *database.Connector) {
+func DeleteGenre(c *gin.Context, conn *database.Connector) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{
@@ -96,7 +96,7 @@ func DeleteBook(c *gin.Context, conn *database.Connector) {
 		return
 	}
 
-	err = database.DeleteBook(conn, id)
+	err = database.DeleteGenre(conn, id)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{
 			"message": err.Error(),
@@ -105,6 +105,6 @@ func DeleteBook(c *gin.Context, conn *database.Connector) {
 	}
 
 	c.IndentedJSON(http.StatusOK, gin.H{
-		"message": "Book deleted",
+		"message": "Genre deleted",
 	})
 }
