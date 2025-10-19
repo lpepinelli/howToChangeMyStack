@@ -9,5 +9,7 @@ func main() {
 	defer db.Close()
 	router := getRoutes(db)
 
-	router.Run("localhost:5002")
+	// Use HTTPS for local development
+	router.RunTLS(":5002", "cert.pem", "key.pem")
+	// router.Run("localhost:5002")
 }

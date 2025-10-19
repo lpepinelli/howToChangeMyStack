@@ -1,8 +1,8 @@
 package database
 
 type Genre struct {
-	Id   int
-	Name string
+	Id   int    `json:"id"`
+	Name string `json:"name"`
 }
 
 func GetGenres(conn *Connector) ([]Genre, error) {

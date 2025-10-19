@@ -8,22 +8,22 @@ const { Title } = Typography;
 
 function Genres() {
     const [genres, setGenres] = React.useState([]);
-    const {loading, request, error} = useFetch();
+    const { loading, request, error } = useFetch();
 
-    React.useEffect(()=>{
-        async function fetchGenres(url :string){
-            const {response, json, error} = await request(url, "READ");
-            if(response.ok)
+    React.useEffect(() => {
+        async function fetchGenres(url: string) {
+            const { response, json, error } = await request(url, "READ");
+            if (response.ok)
                 setGenres(json);
             else
                 console.error(error);
         }
-        fetchGenres("https://localhost:5002/api/Genre");
-    },[])
+        fetchGenres("https://localhost:5002/api/genre");
+    }, [])
 
     return (
         <>
-            <Head title="Consulta | Gêneros"/>
+            <Head title="Consulta | Gêneros" />
             <Title level={3}>Consulta - Gêneros</Title>
             <SearchCard headers={[
                 {
@@ -32,15 +32,15 @@ function Genres() {
                     key: 'name',
                 },
             ]}
-            filters={[
-                {
-                    label: 'Nome',
-                    value: 'name',
-                }
-            ]}
-            data={genres}
-            entity="Genre"
-            loading={loading} />
+                filters={[
+                    {
+                        label: 'Nome',
+                        value: 'name',
+                    }
+                ]}
+                data={genres}
+                entity="Genre"
+                loading={loading} />
         </>
     )
 }

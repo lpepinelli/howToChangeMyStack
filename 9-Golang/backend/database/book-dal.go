@@ -10,7 +10,7 @@ type Book struct {
 	Title       string         `json:"title"`
 	Author      string         `json:"author"`
 	Cover       sql.NullString `json:"-"`
-	Genre       int            `json:"genre"`
+	Genre       Genre          `json:"genre"`
 	Isbn        string         `json:"isbn"`
 	Publication string         `json:"publication"`
 }
@@ -33,7 +33,11 @@ func (b Book) MarshalJSON() ([]byte, error) {
 
 func GetBooks(conn *Connector) ([]Book, error) {
 	books := []Book{}
-	rows, err := conn.db.Query("SELECT * FROM Book")
+	rows, err := conn.db.Query(`
+		SELECT Book.id, Book.title, Book.author, Book.cover, Book.genre_id, Genre.name AS genre_name, Book.isbn, Book.publication
+		FROM Book
+		LEFT JOIN Genre ON Book.genre_id = Genre.id
+	`)
 	if err != nil {
 		return nil, err
 	}
@@ -41,10 +45,14 @@ func GetBooks(conn *Connector) ([]Book, error) {
 
 	for rows.Next() {
 		var book Book
-		err = rows.Scan(&book.Id, &book.Title, &book.Author, &book.Cover, &book.Genre, &book.Isbn, &book.Publication)
+		var genreId int
+		var genreName string
+
+		err = rows.Scan(&book.Id, &book.Title, &book.Author, &book.Cover, &genreId, &genreName, &book.Isbn, &book.Publication)
 		if err != nil {
 			return nil, err
 		}
+		book.Genre = Genre{Id: genreId, Name: genreName}
 		books = append(books, book)
 	}
 	return books, nil
@@ -52,11 +60,19 @@ func GetBooks(conn *Connector) ([]Book, error) {
 
 func GetBookById(conn *Connector, id int) (Book, error) {
 	var book Book
+	var genreId int
+	var genreName string
 
-	err := conn.db.QueryRow("SELECT * FROM Book WHERE id = ?", id).Scan(&book.Id, &book.Title, &book.Author, &book.Cover, &book.Genre, &book.Isbn, &book.Publication)
+	err := conn.db.QueryRow(`
+		SELECT Book.id, Book.title, Book.author, Book.cover, Book.genre_id, Genre.name AS genre_name, Book.isbn, Book.publication
+		FROM Book
+		LEFT JOIN Genre ON Book.genre_id = Genre.id
+		WHERE Book.id = ?
+	`, id).Scan(&book.Id, &book.Title, &book.Author, &book.Cover, &genreId, &genreName, &book.Isbn, &book.Publication)
 	if err != nil {
 		return book, err
 	}
+	book.Genre = Genre{Id: genreId, Name: genreName}
 
 	return book, nil
 }
@@ -82,6 +98,15 @@ func UpdateBook(conn *Connector, book *Book) error {
 
 func DeleteBook(conn *Connector, id int) error {
 	_, err := conn.db.Exec("DELETE FROM Book WHERE id = ?", id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func UpdateBookCover(conn *Connector, oldCover, newCover string) error {
+	_, err := conn.db.Exec("UPDATE Book SET cover = ? WHERE cover = ?", newCover, oldCover)
 	if err != nil {
 		return err
 	}
